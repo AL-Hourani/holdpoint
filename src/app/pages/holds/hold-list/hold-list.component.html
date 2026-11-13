@@ -1,0 +1,13 @@
+@if (loading()) {<div class="loading"></div>}
+<div class="ph"><h1>Holds</h1><span class="sp"></span><a routerLink="/console/holds/new" class="btn pri"><span class="ms">add_task</span>Create hold</a></div>
+@if (error()) {<p class="err"><span class="ms">error</span>{{ error() }}</p>}
+<div class="tbl">
+  <div class="toolbar">@for (f of filters; track f.label) {<button class="fchip" [class.on]="status() === f.v" (click)="setFilter(f.v)">{{ f.label }}</button>}</div>
+  <table><thead><tr><th>Hold ID</th><th>Resource</th><th>Holder</th><th>Qty</th><th>Status</th><th>Created</th><th>Expires</th><th></th></tr></thead><tbody>
+    @for (h of holds(); track h.id) {
+      <tr><td class="mono">{{ h.id.slice(0, 8) }}</td><td><a [routerLink]="['/console/resources', h.resourceId]">{{ h.resourceKey }}</a></td><td>{{ h.holderName }}</td><td>{{ h.quantity }}</td>
+        <td><span [class]="chip(h)">{{ h.status }}</span></td><td>{{ h.createdAt | date: 'MMM d, h:mm a' }}</td><td>{{ h.expiresAt | date: 'MMM d, h:mm a' }}</td>
+        <td>@if (h.status === 'ACTIVE') {<button class="btn sm danger" (click)="release(h)">Release</button>}</td></tr>
+    }</tbody></table>
+  @if (!loading() && holds().length === 0) {<div class="empty"><span class="ms">bookmark</span>No holds match this filter.</div>}
+</div>

@@ -1,0 +1,311 @@
+
+<header class="topbar">
+  <div class="nav-container">
+    <a routerLink="/" class="brand">
+      <span class="brand-mark">
+        <i></i><i></i><i></i><i></i>
+      </span>
+      <span>Holdpoint</span>
+    </a>
+
+    <nav class="nav-links">
+      <a href="#platform">Platform</a>
+      <a href="#features">Features</a>
+      <a href="#workflow">How it works</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a routerLink="/login" class="login-link">Sign in</a>
+      <a routerLink="/register" class="btn btn-primary nav-cta">
+        Get started <span>→</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="platform">
+    <div class="hero-container">
+
+      <div class="hero-content">
+        <div class="eyebrow">
+          <span class="status-dot"></span>
+          RESOURCE MANAGEMENT PLATFORM
+        </div>
+
+        <h1>
+          Manage resource
+          <span>reservations.</span>
+          Without conflicts.
+        </h1>
+
+        <p class="hero-description">
+          A reliable infrastructure for managing limited resources.
+          Control capacity, create temporary holds, and manage
+          reservations with consistency and confidence.
+        </p>
+
+        <div class="hero-actions">
+          <a routerLink="/register" class="btn btn-primary btn-large">
+            Get started for free <span>→</span>
+          </a>
+
+          <a routerLink="/login" class="btn btn-secondary btn-large">
+            Explore console
+          </a>
+        </div>
+
+        <div class="hero-note">
+          <span class="check-icon">✓</span>
+          Built for reliable resource allocation
+        </div>
+      </div>
+
+      <!-- PRODUCT PREVIEW -->
+      <div class="preview-wrapper">
+        <div class="preview-window">
+
+          <div class="preview-header">
+            <div class="window-brand">
+              <span class="mini-brand-mark">H</span>
+              <span>Holdpoint Console</span>
+            </div>
+
+            <span class="preview-label">LIVE PREVIEW</span>
+          </div>
+
+          <div class="preview-body">
+            <div class="preview-heading">
+              <div>
+                <span class="section-overline">RESOURCE OVERVIEW</span>
+                <h3>Capacity management</h3>
+                <p>Monitor reserved capacity across resources.</p>
+              </div>
+              <span class="overview-icon">▦</span>
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric-card">
+                <span class="metric-label">Resources</span>
+                <strong>{{ preview.length }}</strong>
+                <span class="metric-caption">Tracked resources</span>
+              </div>
+
+              <div class="metric-card">
+                <span class="metric-label">Held units</span>
+                <strong>
+                  <!-- {{ totalHeld }} -->
+                </strong>
+                <span class="metric-caption">Across all resources</span>
+              </div>
+            </div>
+
+            <div class="resource-panel">
+              <div class="panel-heading">
+                <div>
+                  <h4>Resource utilization</h4>
+                  <p>Capacity allocation overview</p>
+                </div>
+                <span class="panel-menu">•••</span>
+              </div>
+
+              @for (p of preview; track p.n) {
+                <div class="resource-item">
+                  <div class="resource-info">
+                    <div class="resource-name">
+                      <span class="resource-indicator"></span>
+                      {{ p.n }}
+                    </div>
+
+                    <span class="resource-count">
+                      {{ p.h }} / {{ p.c }}
+                    </span>
+                  </div>
+
+                  <div class="progress-track">
+                    <div
+                      class="progress-value"
+                      [class.progress-full]="p.h === p.c"
+                      [style.width.%]="pct(p.h, p.c)">
+                    </div>
+                  </div>
+
+                  <div class="resource-footer">
+                    <span>{{ pct(p.h, p.c) }}% allocated</span>
+
+                    <span
+                      class="availability"
+                      [class.availability-full]="p.h === p.c">
+                      {{ p.h === p.c ? 'At capacity' : 'Available' }}
+                    </span>
+                  </div>
+                </div>
+              }
+
+              <div class="preview-footer">
+                <span class="footer-indicator"></span>
+                Illustrative product data
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="floating-note">
+          <span class="floating-icon">✓</span>
+          <div>
+            <strong>Consistent allocation</strong>
+            <span>Capacity-aware reservations</span>
+          </div>
+        </div> -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TRUST STRIP -->
+  <section class="principles">
+    <div class="principles-container">
+      <div class="principle">
+        <span class="principle-icon">01</span>
+        <span>Controlled capacity</span>
+      </div>
+
+      <div class="principle">
+        <span class="principle-icon">02</span>
+        <span>Consistent reservations</span>
+      </div>
+
+      <div class="principle">
+        <span class="principle-icon">03</span>
+        <span>Reliable resource tracking</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features-section" id="features">
+    <div class="section-container">
+
+      <div class="section-heading">
+        <div>
+          <span class="section-overline">THE PLATFORM</span>
+          <h2>Everything under control.</h2>
+        </div>
+
+        <p>
+          The tools you need to manage resource availability,
+          protect capacity, and maintain reliable reservation workflows.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        @for (f of feats; track f.t; let i = $index) {
+          <article class="feature-card">
+            <div class="feature-top">
+              <span class="feature-number">
+                0{{ i + 1 }}
+              </span>
+              <span class="feature-symbol">{{ f.i }}</span>
+            </div>
+
+            <h3>{{ f.t }}</h3>
+            <p>{{ f.d }}</p>
+
+            <div class="feature-bottom">
+              <span>Platform capability</span>
+              <span>↗</span>
+            </div>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKFLOW -->
+  <section class="workflow-section" id="workflow">
+    <div class="section-container">
+
+      <div class="workflow-heading">
+        <span class="section-overline">SIMPLE BY DESIGN</span>
+        <h2>From available capacity<br>to confirmed reservations.</h2>
+        <p>
+          A clear reservation lifecycle designed to keep resource
+          allocation predictable and controlled.
+        </p>
+      </div>
+
+      <div class="workflow-grid">
+
+        <article class="workflow-card">
+          <div class="workflow-number">01</div>
+          <div class="workflow-icon">▦</div>
+          <h3>Define resources</h3>
+          <p>
+            Create resources with unique identifiers and
+            clearly defined capacity limits.
+          </p>
+          <span class="workflow-tag">Resource management</span>
+        </article>
+
+        <article class="workflow-card">
+          <div class="workflow-number">02</div>
+          <div class="workflow-icon">◷</div>
+          <h3>Create temporary holds</h3>
+          <p>
+            Allocate available capacity through temporary
+            reservations with expiration times.
+          </p>
+          <span class="workflow-tag">Capacity protection</span>
+        </article>
+
+        <article class="workflow-card">
+          <div class="workflow-number">03</div>
+          <div class="workflow-icon">✓</div>
+          <h3>Confirm and track</h3>
+          <p>
+            Confirm reservations, release expired holds,
+            and keep resource availability consistent.
+          </p>
+          <span class="workflow-tag">Reservation lifecycle</span>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-container">
+      <div>
+        <span class="section-overline">GET STARTED WITH HOLDPOINT</span>
+        <h2>Make resource allocation<br>more reliable.</h2>
+        <p>
+          Bring clarity and control to every reservation.
+          Start building your resource management workspace.
+        </p>
+      </div>
+
+      <a routerLink="/register" class="btn cta-button">
+        Create your account <span>→</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-container">
+    <a routerLink="/" class="brand footer-brand">
+      <span class="brand-mark">
+        <i></i><i></i><i></i><i></i>
+      </span>
+      <span>Holdpoint</span>
+    </a>
+
+    <span>Resource reservation infrastructure.</span>
+
+    <span>© 2026 Holdpoint</span>
+  </div>
+</footer>

@@ -1,0 +1,28 @@
+<header class="topbar">
+  <button class="icon-btn" (click)="open.set(!open())" aria-label="Main menu"><span class="ms">menu</span></button>
+  <a routerLink="/console" class="brand"><span class="mark"><i></i><i></i><i></i><i></i></span>Holdora <small>Console</small></a>
+  <form class="search" (submit)="search($event, q.value)" role="search">
+    <span class="ms">search</span><input #q placeholder="Search resources by key or name" aria-label="Search resources" />
+  </form>
+  <span class="sp"></span>
+  <a routerLink="/console/resources/new" class="btn pri"><span class="ms">add</span>Create resource</a>
+  <div class="pw">
+    <button class="avatar" (click)="menu.set(!menu())" aria-label="Account">{{ initial() }}</button>
+    @if (menu()) {
+      <div class="pop"><div><b>{{ auth.name() || 'Account' }}</b><div class="muted">{{ auth.email() }}</div></div>
+        <button class="btn" (click)="auth.logout()"><span class="ms">logout</span>Sign out</button></div>
+    }
+  </div>
+</header>
+<div class="body">
+  <nav class="side" [class.collapsed]="!open()" aria-label="Main">
+    @for (g of nav; track g.h) {
+      <h4>{{ g.h }}</h4>
+      @for (i of g.items; track i.link) {
+        <a [routerLink]="i.link" routerLinkActive="on" [routerLinkActiveOptions]="{ exact: i.exact }" [title]="i.label"><span class="ms">{{ i.icon }}</span><span class="lbl">{{ i.label }}</span></a>
+      }
+    }
+  </nav>
+  <main class="main"><router-outlet /></main>
+</div>
+@if (toast.msg(); as t) {<div class="snack" role="status">{{ t }}</div>}

@@ -1,0 +1,10 @@
+<div class="ph"><div><div class="crumb"><a routerLink="/console/resources">Resources</a> › New</div><h1>Create a resource</h1></div></div>
+<form class="form card" [formGroup]="form" (ngSubmit)="submit()">
+  <div class="gf"><input id="k" formControlName="resourceKey" placeholder=" " /><label for="k">Resource key</label></div>
+  <p class="hint">Lowercase letters, numbers and hyphens. Must be unique, e.g. conference-room-a.</p>
+  <div class="gf"><input id="n" formControlName="name" placeholder=" " /><label for="n">Name</label></div>
+  <div class="gf"><input id="c" type="number" min="1" formControlName="capacity" placeholder=" " /><label for="c">Capacity</label></div>
+  <p class="hint">The maximum units that can be held at the same time.</p>
+  @if (error()) {<p class="err" role="alert"><span class="ms">error</span>{{ error() }}</p>}
+  <div class="acts"><button class="btn pri" [disabled]="form.invalid || busy()">{{ busy() ? 'Creating…' : 'Create' }}</button><a routerLink="/console/resources" class="btn">Cancel</a></div>
+</form>

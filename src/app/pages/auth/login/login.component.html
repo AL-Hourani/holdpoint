@@ -1,0 +1,20 @@
+<div class="auth">
+  <form class="ac" [formGroup]="form" (ngSubmit)="submit()">
+  <a routerLink="/" class="brand">
+    <span class="mark"><i></i><i></i><i></i><i></i></span>Holdpoint</a>
+  <h1>Sign in</h1>
+  <p class="sub">to continue to the Holdpoint console</p>
+  <div class="gf">
+    <input id="e" type="email" formControlName="email" placeholder=" " autocomplete="email" />
+    <label for="e">Email</label>
+  </div>
+  <div class="gf">
+    <input id="p" type="password" formControlName="password" placeholder=" " autocomplete="current-password" />
+    <label for="p">Password</label>
+  </div>
+  @if (error()) {
+    <p class="err" role="alert">
+      <span class="ms">error</span>{{ error() }}</p>}
+  @if (mock) {<p class="demo">Demo account: demo&#64;holdora.dev / demo1234</p>}
+  <div class="alt"><a routerLink="/register">Create account</a><button class="btn pri" [disabled]="form.invalid || busy()">{{ busy() ? 'Signing in…' : 'Sign in' }}</button></div>
+</form></div>

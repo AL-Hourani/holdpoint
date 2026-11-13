@@ -1,0 +1,10 @@
+<div class="auth"><form class="ac" [formGroup]="form" (ngSubmit)="submit()">
+  <a routerLink="/" class="brand"><span class="mark"><i></i><i></i><i></i><i></i></span>Holdora</a>
+  <h1>Create your account</h1><p class="sub">to start managing holds</p>
+  <div class="gf"><input id="n" formControlName="name" placeholder=" " autocomplete="name" /><label for="n">Full name</label></div>
+  <div class="gf"><input id="e" type="email" formControlName="email" placeholder=" " autocomplete="email" /><label for="e">Email</label></div>
+  <div class="gf"><input id="p" type="password" formControlName="password" placeholder=" " autocomplete="new-password" /><label for="p">Password</label></div>
+  <p class="hint">Use 8 or more characters.</p>
+  @if (error()) {<p class="err" role="alert"><span class="ms">error</span>{{ error() }}</p>}
+  <div class="alt"><a routerLink="/login">Sign in instead</a><button class="btn pri" [disabled]="form.invalid || busy()">{{ busy() ? 'Creating…' : 'Create account' }}</button></div>
+</form></div>

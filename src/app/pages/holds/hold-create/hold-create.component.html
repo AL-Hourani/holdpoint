@@ -1,0 +1,12 @@
+<div class="ph"><div><div class="crumb"><a routerLink="/console/holds">Holds</a> › New</div><h1>Create a hold</h1></div></div>
+<form class="form card" [formGroup]="form" (ngSubmit)="submit()">
+  <div class="gf"><select id="r" formControlName="resourceId"><option value="" disabled>Select a resource</option>
+    @for (r of resources(); track r.id) {<option [value]="r.id">{{ r.name }} ({{ r.resourceKey }})</option>}</select><label for="r">Resource</label></div>
+  @if (selected(); as s) {<p class="hint">{{ avail() }} of {{ s.capacity }} units available.</p>}
+  <div class="gf"><input id="h" formControlName="holderName" placeholder=" " /><label for="h">Held for (team or person)</label></div>
+  <div class="gf"><input id="q" type="number" min="1" formControlName="quantity" placeholder=" " /><label for="q">Quantity</label></div>
+  @if (tooMany()) {<p class="err"><span class="ms">warning</span>Quantity exceeds the {{ avail() }} available units.</p>}
+  <div class="gf"><select id="d" formControlName="durationMinutes">@for (d of durations; track d.m) {<option [ngValue]="d.m">{{ d.l }}</option>}</select><label for="d">Hold duration</label></div>
+  @if (error()) {<p class="err" role="alert"><span class="ms">error</span>{{ error() }}</p>}
+  <div class="acts"><button class="btn pri" [disabled]="form.invalid || tooMany() || busy()">{{ busy() ? 'Creating…' : 'Create hold' }}</button><a routerLink="/console/holds" class="btn">Cancel</a></div>
+</form>

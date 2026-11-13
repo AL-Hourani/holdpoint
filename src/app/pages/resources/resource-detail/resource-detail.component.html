@@ -1,0 +1,34 @@
+@if (loading()) {<div class="loading"></div>}
+@if (error()) {<p class="err"><span class="ms">error</span>{{ error() }}</p><p><a routerLink="/console/resources">Back to resources</a></p>}
+@if (resource(); as r) {
+  <div class="ph"><div><div class="crumb"><a routerLink="/console/resources">Resources</a> › {{ r.resourceKey }}</div><h1>{{ r.name }}</h1></div>
+    <span class="chip" [class.ok]="available(r) > 0" [class.err]="available(r) === 0">{{ available(r) === 0 ? 'Full' : 'Available' }}</span><span class="sp"></span>
+    <button class="btn" (click)="openEdit()"><span class="ms">tune</span>Edit capacity</button>
+    <a class="btn pri" routerLink="/console/holds/new" [queryParams]="{ resourceId: r.id }"><span class="ms">add_task</span>Create hold</a></div>
+  <div class="grid g4 mb">
+    <div class="card stat"><div class="l">Capacity</div><div class="v">{{ r.capacity }}</div></div>
+    <div class="card stat"><div class="l">Held</div><div class="v">{{ held(r) }}</div></div>
+    <div class="card stat"><div class="l">Available</div><div class="v">{{ available(r) }}</div></div>
+    <div class="card stat"><div class="l">Utilization</div><div class="v">{{ pct() }}%</div><div [class]="barClass(pct())"><i [style.width.%]="pct()"></i></div></div>
+  </div>
+  <div class="grid g2">
+    <div class="tbl"><div class="toolbar"><b>Holds on this resource</b></div>
+      <table><thead><tr><th>Holder</th><th>Qty</th><th>Status</th><th>Expires</th><th></th></tr></thead><tbody>
+        @for (h of holds(); track h.id) {
+          <tr><td>{{ h.holderName }}</td><td>{{ h.quantity }}</td><td><span [class]="chip(h)">{{ h.status }}</span></td><td>{{ h.expiresAt | date: 'MMM d, h:mm a' }}</td>
+            <td>@if (h.status === 'ACTIVE') {<button class="btn sm danger" (click)="release(h)">Release</button>}</td></tr>
+        }</tbody></table>
+      @if (holds().length === 0) {<div class="empty"><span class="ms">bookmark</span>No holds on this resource.</div>}
+    </div>
+    <div class="card"><h3>Details</h3><dl class="kv"><dt>Key</dt><dd class="mono">{{ r.resourceKey }}</dd><dt>Resource ID</dt><dd class="mono">{{ r.id }}</dd>
+      <dt>Created</dt><dd>{{ r.createdAt ? (r.createdAt | date: 'MMM d, y') : '—' }}</dd></dl></div>
+  </div>
+  @if (editing()) {
+    <div class="scrim" (click)="editing.set(false)"><form class="modal" (click)="$event.stopPropagation()" (ngSubmit)="saveCap()" role="dialog" aria-modal="true" aria-label="Edit capacity">
+      <h2>Edit capacity</h2><p class="muted">Currently {{ held(r) }} units are held. Capacity cannot go below that.</p>
+      <div class="gf"><input id="cap" type="number" min="1" [formControl]="cap" placeholder=" " /><label for="cap">New capacity</label></div>
+      @if (formError()) {<p class="err" role="alert"><span class="ms">error</span>{{ formError() }}</p>}
+      <div class="acts"><button type="button" class="btn" (click)="editing.set(false)">Cancel</button><button class="btn pri" [disabled]="cap.invalid || busy()">Save</button></div>
+    </form></div>
+  }
+}

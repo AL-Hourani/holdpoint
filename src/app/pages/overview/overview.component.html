@@ -1,0 +1,456 @@
+
+<div class="overview-page">
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <div class="page-heading">
+      <div class="breadcrumb">
+        <span>Console</span>
+        <span class="breadcrumb-separator">/</span>
+        <span class="current">Overview</span>
+      </div>
+
+      <h1>Overview</h1>
+      <p>
+        Monitor your resources, capacity, and reservation activity
+        from one place.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/console/holds/new" class="action-button secondary">
+        <span class="ms">bookmark_add</span>
+        Create hold
+      </a>
+
+      <a routerLink="/console/resources/new" class="action-button primary">
+        <span class="ms">add</span>
+        Create resource
+      </a>
+    </div>
+  </header>
+
+  <!-- ERROR -->
+  @if (error()) {
+    <div class="error-banner">
+      <span class="ms">error_outline</span>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  <!-- LOADING -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <span>Loading your workspace...</span>
+    </div>
+  }
+
+  @if (!loading()) {
+
+    <!-- KPI SECTION -->
+    <section class="metrics-grid">
+
+      <article class="metric-card">
+        <div class="metric-top">
+          <div class="metric-icon blue">
+            <span class="ms">inventory_2</span>
+          </div>
+          <span class="metric-caption">RESOURCE INVENTORY</span>
+        </div>
+
+        <div class="metric-value">
+          {{ resources().length }}
+        </div>
+
+        <div class="metric-bottom">
+          <span class="metric-description">
+            Total registered resources
+          </span>
+          <span class="metric-arrow">
+            <span class="ms">database</span>
+          </span>
+        </div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">
+          <div class="metric-icon green">
+            <span class="ms">bookmark_added</span>
+          </div>
+          <span class="metric-caption">ACTIVE RESERVATIONS</span>
+        </div>
+
+        <div class="metric-value">
+          {{ activeCount() }}
+        </div>
+
+        <div class="metric-bottom">
+          <span class="metric-description">
+            Currently active holds
+          </span>
+          <span class="metric-arrow">
+            <span class="ms">schedule</span>
+          </span>
+        </div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">
+          <div class="metric-icon orange">
+            <span class="ms">stacks</span>
+          </div>
+          <span class="metric-caption">ALLOCATED UNITS</span>
+        </div>
+
+        <div class="metric-value">
+          {{ totalHeld() }}
+          <small>/ {{ totalCap() }}</small>
+        </div>
+
+        <div class="metric-bottom">
+          <span class="metric-description">
+            Held units across resources
+          </span>
+          <span class="metric-arrow">
+            <span class="ms">layers</span>
+          </span>
+        </div>
+      </article>
+
+      <article class="metric-card utilization-card">
+        <div class="metric-top">
+          <div class="metric-icon purple">
+            <span class="ms">speed</span>
+          </div>
+          <span class="metric-caption">CAPACITY UTILIZATION</span>
+        </div>
+
+        <div class="metric-value">
+          {{ pct() }}<small>%</small>
+        </div>
+
+        <div class="metric-progress">
+          <div
+            [class]="barClass(pct())"
+            class="metric-progress-track">
+            <i [style.width.%]="pct()"></i>
+          </div>
+        </div>
+
+        <div class="metric-bottom">
+          <span class="metric-description">
+            Overall allocated capacity
+          </span>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- MAIN DASHBOARD GRID -->
+    <section class="dashboard-grid">
+
+      <!-- RESOURCE ANALYTICS -->
+      <article class="dashboard-panel resources-panel">
+
+        <div class="panel-header">
+          <div>
+            <span class="panel-eyebrow">RESOURCE ANALYTICS</span>
+            <h2>Resource utilization</h2>
+            <p>Capacity distribution across your resources.</p>
+          </div>
+
+          <a
+            routerLink="/console/resources"
+            class="panel-link">
+            View resources
+            <span class="ms">arrow_forward</span>
+          </a>
+        </div>
+
+        @if (top().length > 0) {
+          <div class="resource-list">
+
+            @for (r of top(); track r.id) {
+              <div class="resource-row">
+
+                <div class="resource-main">
+                  <div class="resource-symbol">
+                    <span class="ms">inventory_2</span>
+                  </div>
+
+                  <div class="resource-details">
+                    <a [routerLink]="['/console/resources', r.id]">
+                      {{ r.name }}
+                    </a>
+                    <span>{{ r.id }}</span>
+                  </div>
+                </div>
+
+                <div class="resource-usage">
+                  <div class="usage-numbers">
+                    <strong>{{ r.heldQuantity ?? 0 }}</strong>
+                    <span>/ {{ r.capacity }} units</span>
+                  </div>
+
+                  <div
+                    class="usage-progress"
+                    [class.usage-warning]="util(r) >= 80"
+                    [class.usage-critical]="util(r) >= 100">
+                    <i [style.width.%]="util(r)"></i>
+                  </div>
+
+                  <div class="usage-percentage">
+                    {{ util(r) }}% utilized
+                  </div>
+                </div>
+
+                <a
+                  [routerLink]="['/console/resources', r.id]"
+                  class="resource-open"
+                  aria-label="View resource">
+                  <span class="ms">chevron_right</span>
+                </a>
+
+              </div>
+            }
+
+          </div>
+        } @else {
+          <div class="empty-state">
+            <div class="empty-icon">
+              <span class="ms">inventory_2</span>
+            </div>
+            <h3>No resources yet</h3>
+            <p>
+              Create your first resource to start managing
+              capacity and reservations.
+            </p>
+            <a routerLink="/console/resources/new" class="text-action">
+              Create your first resource
+              <span class="ms">arrow_forward</span>
+            </a>
+          </div>
+        }
+
+        <div class="panel-footer">
+          <span>
+            <span class="footer-dot"></span>
+            Capacity allocation overview
+          </span>
+          <span>Top utilized resources</span>
+        </div>
+
+      </article>
+
+      <!-- CAPACITY SUMMARY -->
+      <article class="dashboard-panel capacity-panel">
+
+        <div class="panel-header">
+          <div>
+            <span class="panel-eyebrow">CAPACITY INSIGHTS</span>
+            <h2>Capacity overview</h2>
+            <p>Current allocation summary.</p>
+          </div>
+
+          <span class="panel-header-icon ms">donut_large</span>
+        </div>
+
+        <div class="capacity-visual">
+          <div
+            class="capacity-ring"
+            [style.--utilization]="pct() + '%'">
+            <div class="capacity-ring-inner">
+              <strong>{{ pct() }}%</strong>
+              <span>Utilized</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="capacity-breakdown">
+
+          <div class="breakdown-row">
+            <div class="breakdown-label">
+              <span class="legend-dot allocated"></span>
+              <span>Held capacity</span>
+            </div>
+            <strong>{{ totalHeld() }} units</strong>
+          </div>
+
+          <div class="breakdown-row">
+            <div class="breakdown-label">
+              <span class="legend-dot available"></span>
+              <span>Remaining capacity</span>
+            </div>
+            <strong>
+              {{ totalCap() - totalHeld() }} units
+            </strong>
+          </div>
+
+          <div class="breakdown-divider"></div>
+
+          <div class="breakdown-row total-row">
+            <span>Total capacity</span>
+            <strong>{{ totalCap() }} units</strong>
+          </div>
+
+        </div>
+
+        <a routerLink="/console/resources" class="capacity-link">
+          Explore resource inventory
+          <span class="ms">arrow_forward</span>
+        </a>
+
+      </article>
+
+    </section>
+
+    <!-- RECENT HOLDS -->
+    <section class="dashboard-panel recent-panel">
+
+      <div class="panel-header recent-header">
+        <div>
+          <span class="panel-eyebrow">ACTIVITY</span>
+          <h2>Recent reservations</h2>
+          <p>Keep track of the latest reservation activity.</p>
+        </div>
+
+        <a routerLink="/console/holds" class="panel-link">
+          View all reservations
+          <span class="ms">arrow_forward</span>
+        </a>
+      </div>
+
+      @if (recent().length > 0) {
+
+        <div class="table-wrapper">
+          <table class="holds-table">
+            <thead>
+              <tr>
+                <th>HOLDER</th>
+                <th>RESOURCE</th>
+                <th>QUANTITY</th>
+                <th>CREATED</th>
+                <th>STATUS</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (h of recent(); track h.id) {
+                <tr>
+
+                  <td>
+                    <div class="holder-cell">
+                      <div class="holder-avatar">
+                        {{ h.holderName.charAt(0).toUpperCase() }}
+                      </div>
+                      <strong>{{ h.holderName }}</strong>
+                    </div>
+                  </td>
+
+                  <td>
+                    <span class="resource-key">
+                      {{ h.resourceKey }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <strong>{{ h.quantity }}</strong>
+                    <span class="unit-label">units</span>
+                  </td>
+
+                  <td class="date-cell">
+                    {{ h.createdAt | date: 'MMM d, y · h:mm a' }}
+                  </td>
+
+                  <td>
+                    <span [class]="chip(h)" class="status-chip">
+                      <span class="status-dot"></span>
+                      {{ h.status }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <a
+                      routerLink="/console/holds"
+                      class="table-action"
+                      aria-label="View reservations">
+                      <span class="ms">arrow_forward</span>
+                    </a>
+                  </td>
+
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+      } @else {
+
+        <div class="empty-state compact-empty">
+          <div class="empty-icon">
+            <span class="ms">bookmark_border</span>
+          </div>
+          <h3>No reservations yet</h3>
+          <p>Your recent reservation activity will appear here.</p>
+          <a routerLink="/console/holds/new" class="text-action">
+            Create your first hold
+            <span class="ms">arrow_forward</span>
+          </a>
+        </div>
+
+      }
+
+    </section>
+
+    <!-- QUICK ACTIONS -->
+    <section class="quick-actions-section">
+      <div class="quick-heading">
+        <div>
+          <span class="panel-eyebrow">WORKSPACE SHORTCUTS</span>
+          <h2>Quick actions</h2>
+        </div>
+      </div>
+
+      <div class="quick-actions-grid">
+
+        <a routerLink="/console/resources/new" class="quick-action">
+          <div class="quick-icon blue">
+            <span class="ms">add_box</span>
+          </div>
+          <div>
+            <strong>Create a resource</strong>
+            <span>Register a new resource and define its capacity.</span>
+          </div>
+          <span class="ms quick-arrow">arrow_forward</span>
+        </a>
+
+        <a routerLink="/console/holds/new" class="quick-action">
+          <div class="quick-icon green">
+            <span class="ms">bookmark_add</span>
+          </div>
+          <div>
+            <strong>Create a hold</strong>
+            <span>Allocate available capacity through a new hold.</span>
+          </div>
+          <span class="ms quick-arrow">arrow_forward</span>
+        </a>
+
+        <a routerLink="/console/resources" class="quick-action">
+          <div class="quick-icon orange">
+            <span class="ms">manage_search</span>
+          </div>
+          <div>
+            <strong>Manage resources</strong>
+            <span>Review your resource inventory and capacity.</span>
+          </div>
+          <span class="ms quick-arrow">arrow_forward</span>
+        </a>
+
+      </div>
+    </section>
+
+  }
+
+</div>

@@ -1,0 +1,16 @@
+@if (loading()) {<div class="loading"></div>}
+<div class="ph"><h1>Resources</h1><span class="sp"></span><a routerLink="/console/resources/new" class="btn pri"><span class="ms">add</span>Create resource</a></div>
+@if (error()) {<p class="err"><span class="ms">error</span>{{ error() }}</p>}
+<div class="tbl">
+  <div class="toolbar"><span class="ms muted">filter_list</span><input placeholder="Filter resources" [value]="term()" (input)="term.set($any($event.target).value)" aria-label="Filter resources" /></div>
+  <table><thead><tr><th>Name</th><th>Key</th><th>Capacity</th><th>Held</th><th>Available</th><th style="width:180px">Utilization</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      @for (r of rows(); track r.id) {
+        <tr><td><a [routerLink]="['/console/resources', r.id]">{{ r.name }}</a></td><td class="mono">{{ r.resourceKey }}</td><td>{{ r.capacity }}</td><td>{{ held(r) }}</td><td>{{ available(r) }}</td>
+          <td><div [class]="barClass(util(r))"><i [style.width.%]="util(r)"></i></div></td>
+          <td><span class="chip" [class.ok]="available(r) > 0" [class.err]="available(r) === 0">{{ available(r) === 0 ? 'Full' : 'Available' }}</span></td>
+          <td><a class="btn sm" [routerLink]="['/console/holds/new']" [queryParams]="{ resourceId: r.id }">Hold</a></td></tr>
+      }
+    </tbody></table>
+  @if (!loading() && rows().length === 0) {<div class="empty"><span class="ms">search_off</span>No resources match.</div>}
+</div>
