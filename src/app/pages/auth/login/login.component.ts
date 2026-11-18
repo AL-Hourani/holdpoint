@@ -6,7 +6,7 @@ import { errText } from '../../../core/util';
 import { 
   LucideMail , 
   LucideLock , 
-  LucideArrowBigRight,
+  LucideArrowRight,
   LucideCircleX
 } from '@lucide/angular';
 
@@ -17,7 +17,7 @@ import {
      RouterLink,
      LucideMail,
      LucideLock,
-     LucideArrowBigRight,
+     LucideArrowRight,
      LucideCircleX
     ], 
   templateUrl: './login.component.html',
