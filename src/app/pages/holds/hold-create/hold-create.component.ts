@@ -8,7 +8,45 @@ import { ResourceService } from '../../../core/services/resource.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { available, errText } from '../../../core/util';
 
-@Component({ selector: 'app-hold-create', imports: [ReactiveFormsModule, RouterLink], templateUrl: './hold-create.component.html' })
+import {
+  LucideChevronRight,
+  LucideBookmarkPlus,
+  LucideArrowLeft,
+  LucidePackage,
+  LucideChevronDown,
+  LucideBoxes,
+  LucideUsers,
+  LucideInfo,
+  LucideAlertTriangle,
+  LucideClock3,
+  LucideAlertCircle,
+  LucideShieldCheck,
+  LucideCheck,
+  LucideLightbulb
+} from '@lucide/angular';
+
+@Component({ 
+  selector: 'app-hold-create', 
+  imports: [ReactiveFormsModule, RouterLink,
+     LucideChevronRight,
+  LucideBookmarkPlus,
+  LucideArrowLeft,
+  LucidePackage,
+  LucideChevronDown,
+  LucideBoxes,
+  LucideUsers,
+  LucideInfo,
+  LucideAlertTriangle,
+  LucideClock3,
+  LucideAlertCircle,
+  LucideShieldCheck,
+  LucideCheck,
+  LucideLightbulb
+
+  ], 
+  templateUrl: './hold-create.component.html' ,
+  styleUrl :'./new-hold.component.css'
+})
 export class HoldCreateComponent {
   readonly resourceId = input<string>();
   private readonly hs = inject(HoldService); private readonly router = inject(Router); private readonly toast = inject(ToastService);

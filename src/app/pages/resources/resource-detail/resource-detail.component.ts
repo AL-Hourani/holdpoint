@@ -10,13 +10,44 @@ import { ResourceService } from '../../../core/services/resource.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { available, barClass, errText, held, holdChip, util } from '../../../core/util';
 
-@Component({ selector: 'app-resource-detail', imports: [RouterLink, DatePipe, ReactiveFormsModule], templateUrl: './resource-detail.component.html' })
+@Component({ selector: 'app-resource-detail', 
+  imports: [RouterLink, DatePipe, ReactiveFormsModule], 
+  templateUrl: './resource-detail.component.html',
+  styleUrl:'./resource-details.component.css'
+ })
 export class ResourceDetailComponent {
   readonly id = input.required<string>();
-  private readonly rs = inject(ResourceService); private readonly hs = inject(HoldService); private readonly toast = inject(ToastService);
-  readonly util = util; readonly available = available; readonly held = held; readonly barClass = barClass; readonly chip = holdChip;
-  readonly loading = signal(true); readonly error = signal(''); readonly editing = signal(false); readonly busy = signal(false); readonly formError = signal('');
-  readonly resource = signal<Resource | null>(null); readonly holds = signal<Hold[]>([]);
+
+  private readonly rs = inject(ResourceService); 
+  
+  private readonly hs = inject(HoldService); 
+  
+  private readonly toast = inject(ToastService);
+
+  readonly util = util; 
+  
+  readonly available = available; 
+  
+  readonly held = held; 
+  
+  readonly barClass = barClass; 
+  
+  readonly chip = holdChip;
+
+  readonly loading = signal(true); 
+
+  readonly error = signal(''); 
+
+  readonly editing = signal(false);
+  
+  readonly busy = signal(false); 
+  
+  readonly formError = signal('');
+
+  readonly resource = signal<Resource | null>(null); 
+
+  readonly holds = signal<Hold[]>([]);
+  
   readonly cap = new FormControl(1, { nonNullable: true, validators: [Validators.required, Validators.min(1)] });
   readonly pct = computed(() => { const r = this.resource(); return r ? util(r) : 0; });
   constructor() { effect(() => { const id = this.id(); untracked(() => this.load(id)); }); }
@@ -34,7 +65,7 @@ export class ResourceDetailComponent {
       error: e => { this.formError.set(errText(e)); this.busy.set(false); } });
   }
   release(h: Hold) {
-    if (!confirm(`Release ${h.quantity} unit(s) held by ${h.holderName}?`)) return;
+    if (!confirm(`Release ${h.quantity} unit(s) held by ?`)) return;
     this.hs.release(h.id).subscribe({ next: () => { this.toast.show('Hold released'); this.load(this.id()); }, error: e => this.toast.show(errText(e)) });
   }
 }

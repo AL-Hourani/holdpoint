@@ -1,34 +1,467 @@
-@if (loading()) {<div class="loading"></div>}
-@if (error()) {<p class="err"><span class="ms">error</span>{{ error() }}</p><p><a routerLink="/console/resources">Back to resources</a></p>}
-@if (resource(); as r) {
-  <div class="ph"><div><div class="crumb"><a routerLink="/console/resources">Resources</a> › {{ r.resourceKey }}</div><h1>{{ r.name }}</h1></div>
-    <span class="chip" [class.ok]="available(r) > 0" [class.err]="available(r) === 0">{{ available(r) === 0 ? 'Full' : 'Available' }}</span><span class="sp"></span>
-    <button class="btn" (click)="openEdit()"><span class="ms">tune</span>Edit capacity</button>
-    <a class="btn pri" routerLink="/console/holds/new" [queryParams]="{ resourceId: r.id }"><span class="ms">add_task</span>Create hold</a></div>
-  <div class="grid g4 mb">
-    <div class="card stat"><div class="l">Capacity</div><div class="v">{{ r.capacity }}</div></div>
-    <div class="card stat"><div class="l">Held</div><div class="v">{{ held(r) }}</div></div>
-    <div class="card stat"><div class="l">Available</div><div class="v">{{ available(r) }}</div></div>
-    <div class="card stat"><div class="l">Utilization</div><div class="v">{{ pct() }}%</div><div [class]="barClass(pct())"><i [style.width.%]="pct()"></i></div></div>
-  </div>
-  <div class="grid g2">
-    <div class="tbl"><div class="toolbar"><b>Holds on this resource</b></div>
-      <table><thead><tr><th>Holder</th><th>Qty</th><th>Status</th><th>Expires</th><th></th></tr></thead><tbody>
-        @for (h of holds(); track h.id) {
-          <tr><td>{{ h.holderName }}</td><td>{{ h.quantity }}</td><td><span [class]="chip(h)">{{ h.status }}</span></td><td>{{ h.expiresAt | date: 'MMM d, h:mm a' }}</td>
-            <td>@if (h.status === 'ACTIVE') {<button class="btn sm danger" (click)="release(h)">Release</button>}</td></tr>
-        }</tbody></table>
-      @if (holds().length === 0) {<div class="empty"><span class="ms">bookmark</span>No holds on this resource.</div>}
+
+<div class="resource-details-page">
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <span>Loading resource details...</span>
     </div>
-    <div class="card"><h3>Details</h3><dl class="kv"><dt>Key</dt><dd class="mono">{{ r.resourceKey }}</dd><dt>Resource ID</dt><dd class="mono">{{ r.id }}</dd>
-      <dt>Created</dt><dd>{{ r.createdAt ? (r.createdAt | date: 'MMM d, y') : '—' }}</dd></dl></div>
-  </div>
-  @if (editing()) {
-    <div class="scrim" (click)="editing.set(false)"><form class="modal" (click)="$event.stopPropagation()" (ngSubmit)="saveCap()" role="dialog" aria-modal="true" aria-label="Edit capacity">
-      <h2>Edit capacity</h2><p class="muted">Currently {{ held(r) }} units are held. Capacity cannot go below that.</p>
-      <div class="gf"><input id="cap" type="number" min="1" [formControl]="cap" placeholder=" " /><label for="cap">New capacity</label></div>
-      @if (formError()) {<p class="err" role="alert"><span class="ms">error</span>{{ formError() }}</p>}
-      <div class="acts"><button type="button" class="btn" (click)="editing.set(false)">Cancel</button><button class="btn pri" [disabled]="cap.invalid || busy()">Save</button></div>
-    </form></div>
   }
-}
+
+  @if (error()) {
+    <div class="error-banner" role="alert">
+      <span class="ms">error</span>
+      <span>{{ error() }}</span>
+    </div>
+
+    <a routerLink="/console/resources" class="back-link">
+      <span class="ms">arrow_back</span>
+      Back to resources
+    </a>
+  }
+
+  @if (resource(); as r) {
+
+    <!-- Page Header -->
+    <header class="page-header">
+
+      <div class="header-main">
+
+        <div class="breadcrumb">
+          <a routerLink="/console/resources">Resources</a>
+          <span class="ms">chevron_right</span>
+          <span>{{ r.resourceKey }}</span>
+        </div>
+
+        <div class="eyebrow">
+          <span class="ms">inventory_2</span>
+          RESOURCE DETAILS
+        </div>
+
+        <h1>{{ r.name }}</h1>
+
+        <p class="page-description">
+          Monitor resource capacity, reservations and availability.
+        </p>
+
+      </div>
+
+      <div class="header-actions">
+
+        <span class="status-chip"
+          [class.available]="available(r) > 0"
+          [class.full]="available(r) === 0">
+
+          <span class="status-dot"></span>
+
+          {{ available(r) === 0 ? 'Full' : 'Available' }}
+
+        </span>
+
+        <button class="btn secondary-btn" (click)="openEdit()">
+          <span class="ms">tune</span>
+          Edit capacity
+        </button>
+
+        <a class="btn primary-btn"
+           routerLink="/console/holds/new"
+           [queryParams]="{ resourceId: r.id }">
+
+          <span class="ms">add_task</span>
+          Create hold
+
+        </a>
+
+      </div>
+
+    </header>
+
+    <!-- Statistics -->
+    <section class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon blue">
+            <span class="ms">inventory_2</span>
+          </div>
+          <span class="stat-label">TOTAL CAPACITY</span>
+        </div>
+
+        <div class="stat-value">{{ r.capacity }}</div>
+
+        <div class="stat-footer">Maximum resource units</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon orange">
+            <span class="ms">bookmark</span>
+          </div>
+          <span class="stat-label">HELD UNITS</span>
+        </div>
+
+        <div class="stat-value">{{ held(r) }}</div>
+
+        <div class="stat-footer">Currently reserved units</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon green">
+            <span class="ms">check_circle</span>
+          </div>
+          <span class="stat-label">AVAILABLE</span>
+        </div>
+
+        <div class="stat-value">{{ available(r) }}</div>
+
+        <div class="stat-footer">Units available for new holds</div>
+      </div>
+
+      <div class="stat-card utilization-card">
+        <div class="stat-top">
+          <div class="stat-icon purple">
+            <span class="ms">analytics</span>
+          </div>
+          <span class="stat-label">UTILIZATION</span>
+        </div>
+
+        <div class="stat-value">{{ pct() }}%</div>
+
+        <div [class]="barClass(pct())">
+          <i [style.width.%]="pct()"></i>
+        </div>
+
+        <div class="stat-footer">Resource utilization rate</div>
+      </div>
+
+    </section>
+
+    <!-- Main Content -->
+    <section class="content-grid">
+
+      <!-- Holds -->
+      <div class="main-column">
+
+        <div class="panel holds-panel">
+
+          <div class="panel-header">
+
+            <div>
+              <div class="panel-title">
+                <span class="ms">event_note</span>
+                <h2>Holds on this resource</h2>
+              </div>
+
+              <p class="panel-description">
+                Track and manage active resource holds.
+              </p>
+            </div>
+
+            <span class="count-badge">
+              {{ holds().length }} records
+            </span>
+
+          </div>
+
+          <div class="table-wrapper">
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Holder</th>
+                  <th>Quantity</th>
+                  <th>Status</th>
+                  <th>Expires</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                @for (h of holds(); track h.id) {
+
+                  <tr>
+
+                    <td>
+                      <div class="holder-cell">
+                        <div class="holder-avatar">
+                          <!-- {{ h.holderName.charAt(0).toUpperCase() }} -->
+                        </div>
+
+                        <!-- <span>{{ h.holderName }}</span> -->
+                      </div>
+                    </td>
+
+                    <td>
+                      <span class="quantity-value">
+                        {{ h.quantity }}
+                      </span>
+                    </td>
+
+                    <td>
+                      <span [class]="chip(h)" class="table-status">
+                        {{ h.status }}
+                      </span>
+                    </td>
+
+                    <td class="date-cell">
+                      {{ h.expiresAt | date: 'MMM d, y, h:mm a' }}
+                    </td>
+
+                    <td>
+                      @if (h) {
+                        <button
+                          class="release-btn"
+                          (click)="release(h)">
+
+                          <span class="ms">close</span>
+                          Release
+
+                        </button>
+                      } @else {
+                        <span class="no-action">—</span>
+                      }
+                    </td>
+
+                  </tr>
+
+                }
+
+              </tbody>
+            </table>
+
+          </div>
+
+          @if (holds().length === 0) {
+
+            <div class="empty-state">
+              <div class="empty-icon">
+                <span class="ms">bookmark_border</span>
+              </div>
+
+              <h3>No holds yet</h3>
+
+              <p>
+                There are currently no holds associated with this resource.
+              </p>
+
+              <a routerLink="/console/holds/new"
+                 [queryParams]="{ resourceId: r.id }"
+                 class="btn primary-btn">
+
+                <span class="ms">add</span>
+                Create first hold
+
+              </a>
+            </div>
+
+          }
+
+        </div>
+
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar-column">
+
+        <div class="panel details-panel">
+
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">
+                <span class="ms">info</span>
+                <h2>Resource information</h2>
+              </div>
+
+              <p class="panel-description">
+                Basic resource information.
+              </p>
+            </div>
+          </div>
+
+          <div class="detail-list">
+
+            <div class="detail-item">
+              <span class="detail-label">Resource name</span>
+              <span class="detail-value">{{ r.name }}</span>
+            </div>
+
+            <div class="detail-item">
+              <span class="detail-label">Resource key</span>
+              <span class="detail-value mono">{{ r.resourceKey }}</span>
+            </div>
+
+            <div class="detail-item">
+              <span class="detail-label">Resource ID</span>
+              <span class="detail-value mono id-value">{{ r.id }}</span>
+            </div>
+
+            <div class="detail-item">
+              <span class="detail-label">Created on</span>
+              <span class="detail-value">
+                {{ r.createdAt ? (r.createdAt | date: 'MMM d, y') : '—' }}
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="panel capacity-panel">
+
+          <div class="capacity-icon">
+            <span class="ms">donut_large</span>
+          </div>
+
+          <h3>Capacity overview</h3>
+
+          <p>
+            Monitor how much of this resource is currently being used.
+          </p>
+
+          <div class="capacity-progress">
+            <div class="progress-heading">
+              <span>Utilization</span>
+              <strong>{{ pct() }}%</strong>
+            </div>
+
+            <div class="progress-track">
+              <i [style.width.%]="pct()"></i>
+            </div>
+          </div>
+
+          <div class="capacity-legend">
+            <span>
+              <i class="legend-dot used"></i>
+              Used / Held
+            </span>
+
+            <span>
+              <i class="legend-dot free"></i>
+              Available
+            </span>
+          </div>
+
+        </div>
+
+      </aside>
+
+    </section>
+
+    <!-- Edit Capacity Modal -->
+    @if (editing()) {
+
+      <div class="modal-overlay" (click)="editing.set(false)">
+
+        <form
+          class="edit-modal"
+          (click)="$event.stopPropagation()"
+          (ngSubmit)="saveCap()"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Edit capacity">
+
+          <div class="modal-heading">
+
+            <div class="modal-icon">
+              <span class="ms">tune</span>
+            </div>
+
+            <button
+              type="button"
+              class="modal-close"
+              (click)="editing.set(false)"
+              aria-label="Close">
+
+              <span class="ms">close</span>
+
+            </button>
+
+          </div>
+
+          <h2>Edit resource capacity</h2>
+
+          <p class="modal-description">
+            Update the maximum capacity available for this resource.
+          </p>
+
+          <div class="current-capacity">
+            <div>
+              <span>Currently held</span>
+              <strong>{{ held(r) }} units</strong>
+            </div>
+
+            <div>
+              <span>Current capacity</span>
+              <strong>{{ r.capacity }} units</strong>
+            </div>
+          </div>
+
+          <div class="field-group">
+
+            <label for="cap">New capacity</label>
+
+            <div class="input-wrap">
+              <span class="ms input-icon">inventory_2</span>
+
+              <input
+                id="cap"
+                type="number"
+                min="1"
+                [formControl]="cap"
+                placeholder="Enter new capacity">
+
+              <span class="input-suffix">UNITS</span>
+            </div>
+
+            <span class="field-hint">
+              Capacity cannot be lower than the currently held quantity.
+            </span>
+
+          </div>
+
+          @if (formError()) {
+            <div class="error-banner" role="alert">
+              <span class="ms">error</span>
+              {{ formError() }}
+            </div>
+          }
+
+          <div class="modal-actions">
+
+            <button
+              type="button"
+              class="btn cancel-btn"
+              (click)="editing.set(false)">
+
+              Cancel
+
+            </button>
+
+            <button
+              type="submit"
+              class="btn primary-btn"
+              [disabled]="cap.invalid || busy()">
+
+              @if (busy()) {
+                <span class="loading-spinner"></span>
+                Saving...
+              } @else {
+                <span class="ms">check</span>
+                Save changes
+              }
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    }
+
+  }
+
+</div>

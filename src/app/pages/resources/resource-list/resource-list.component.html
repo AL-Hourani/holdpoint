@@ -1,16 +1,254 @@
-@if (loading()) {<div class="loading"></div>}
-<div class="ph"><h1>Resources</h1><span class="sp"></span><a routerLink="/console/resources/new" class="btn pri"><span class="ms">add</span>Create resource</a></div>
-@if (error()) {<p class="err"><span class="ms">error</span>{{ error() }}</p>}
-<div class="tbl">
-  <div class="toolbar"><span class="ms muted">filter_list</span><input placeholder="Filter resources" [value]="term()" (input)="term.set($any($event.target).value)" aria-label="Filter resources" /></div>
-  <table><thead><tr><th>Name</th><th>Key</th><th>Capacity</th><th>Held</th><th>Available</th><th style="width:180px">Utilization</th><th>Status</th><th></th></tr></thead>
-    <tbody>
-      @for (r of rows(); track r.id) {
-        <tr><td><a [routerLink]="['/console/resources', r.id]">{{ r.name }}</a></td><td class="mono">{{ r.resourceKey }}</td><td>{{ r.capacity }}</td><td>{{ held(r) }}</td><td>{{ available(r) }}</td>
-          <td><div [class]="barClass(util(r))"><i [style.width.%]="util(r)"></i></div></td>
-          <td><span class="chip" [class.ok]="available(r) > 0" [class.err]="available(r) === 0">{{ available(r) === 0 ? 'Full' : 'Available' }}</span></td>
-          <td><a class="btn sm" [routerLink]="['/console/holds/new']" [queryParams]="{ resourceId: r.id }">Hold</a></td></tr>
+
+<div class="resources-page">
+
+  <!-- Header -->
+  <header class="page-header">
+
+    <div class="header-main">
+
+      <div class="eyebrow">
+        <span class="ms">inventory_2</span>
+        RESOURCE MANAGEMENT
+      </div>
+
+      <h1>Resources</h1>
+
+      <p class="page-description">
+        Manage your resources, monitor capacity and track availability.
+      </p>
+
+    </div>
+
+    <a routerLink="/console/resources/new" class="btn primary-btn">
+      <span class="ms">add</span>
+      Create resource
+    </a>
+
+  </header>
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <span>Loading resources...</span>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="error-banner" role="alert">
+      <span class="ms">error</span>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  <!-- Resources -->
+  @if (!loading() || rows().length > 0) {
+
+    <section class="resources-content">
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+
+        <div class="toolbar-left">
+
+          <div class="search-box">
+            <span class="ms">search</span>
+
+            <input
+              placeholder="Search resources by name or key..."
+              [value]="term()"
+              (input)="term.set($any($event.target).value)"
+              aria-label="Filter resources">
+          </div>
+
+        </div>
+
+        <div class="toolbar-right">
+
+          <span class="results-count">
+            <span class="ms">database</span>
+            {{ rows().length }} resources
+          </span>
+
+        </div>
+
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>RESOURCE</th>
+              <th>RESOURCE KEY</th>
+              <th>CAPACITY</th>
+              <th>HELD</th>
+              <th>AVAILABLE</th>
+              <th class="utilization-heading">UTILIZATION</th>
+              <th>STATUS</th>
+              <th>ACTION</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            @for (r of rows(); track r.id) {
+
+              <tr>
+
+                <!-- Resource -->
+                <td>
+                  <a
+                    class="resource-name"
+                    [routerLink]="['/console/resources', r.id]">
+
+                    <span class="resource-avatar">
+                      <span class="ms">inventory_2</span>
+                    </span>
+
+                    <span class="resource-name-text">
+                      {{ r.name }}
+                      <small>View resource details</small>
+                    </span>
+
+                  </a>
+                </td>
+
+                <!-- Key -->
+                <td>
+                  <span class="resource-key">
+                    {{ r.resourceKey }}
+                  </span>
+                </td>
+
+                <!-- Capacity -->
+                <td>
+                  <span class="number-value">
+                    {{ r.capacity }}
+                  </span>
+                </td>
+
+                <!-- Held -->
+                <td>
+                  <span class="held-value">
+                    {{ held(r) }}
+                  </span>
+                </td>
+
+                <!-- Available -->
+                <td>
+                  <span
+                    class="available-value"
+                    [class.none]="available(r) === 0">
+
+                    {{ available(r) }}
+
+                  </span>
+                </td>
+
+                <!-- Utilization -->
+                <td>
+
+                  <div class="utilization-cell">
+
+                    <div class="utilization-info">
+                      <span>{{ util(r) }}%</span>
+                    </div>
+
+                    <div [class]="barClass(util(r))">
+                      <i [style.width.%]="util(r)"></i>
+                    </div>
+
+                  </div>
+
+                </td>
+
+                <!-- Status -->
+                <td>
+                  <span
+                    class="status-chip"
+                    [class.available]="available(r) > 0"
+                    [class.full]="available(r) === 0">
+
+                    <span class="status-dot"></span>
+
+                    {{ available(r) === 0 ? 'Full' : 'Available' }}
+
+                  </span>
+                </td>
+
+                <!-- Action -->
+                <td>
+
+                  <a
+                    class="action-btn"
+                    [routerLink]="['/console/holds/new']"
+                    [queryParams]="{ resourceId: r.id }">
+
+                    <span class="ms">add</span>
+                    Hold
+
+                  </a>
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <!-- Empty State -->
+      @if (!loading() && rows().length === 0) {
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            <span class="ms">inventory_2</span>
+          </div>
+
+          @if (term().trim()) {
+
+            <h3>No matching resources</h3>
+
+            <p>
+              We couldn't find any resources matching
+              "{{ term() }}". Try another search term.
+            </p>
+
+            <button class="btn secondary-btn" (click)="term.set('')">
+              <span class="ms">close</span>
+              Clear search
+            </button>
+
+          } @else {
+
+            <h3>No resources yet</h3>
+
+            <p>
+              Start managing your inventory by creating your first resource.
+            </p>
+
+            <a routerLink="/console/resources/new" class="btn primary-btn">
+              <span class="ms">add</span>
+              Create your first resource
+            </a>
+
+          }
+
+        </div>
+
       }
-    </tbody></table>
-  @if (!loading() && rows().length === 0) {<div class="empty"><span class="ms">search_off</span>No resources match.</div>}
+
+    </section>
+
+  }
+
 </div>

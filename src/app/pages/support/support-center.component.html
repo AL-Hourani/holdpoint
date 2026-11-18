@@ -1,0 +1,370 @@
+
+<div class="support-page">
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <div>
+      <div class="breadcrumb">
+        <span>Workspace</span>
+        <i>/</i>
+        <strong>Support Center</strong>
+      </div>
+
+      <h1>Support Center</h1>
+      <p>Find answers, explore resources and get help with Holdpoint.</p>
+    </div>
+
+    <button class="request-btn" (click)="openRequestForm()">
+      <svg lucidePlus></svg>
+      Submit a request
+    </button>
+  </header>
+
+  <!-- HERO -->
+  <section class="support-hero">
+
+    <div class="hero-content">
+      <span class="hero-eyebrow">
+        <svg lucideLifeBuoy></svg>
+        HOLDPOINT SUPPORT
+      </span>
+
+      <h2>How can we help<br>you today?</h2>
+
+      <p>
+        Everything you need to understand, manage and get the
+        most out of your Holdpoint workspace.
+      </p>
+
+      <div class="search-box">
+        <svg lucideSearch></svg>
+
+        <input
+          type="search"
+          placeholder="Search for answers, guides and help..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+        />
+
+        <kbd>Search</kbd>
+      </div>
+
+      <div class="popular-searches">
+        <span>Popular:</span>
+        <button (click)="searchQuery.set('resource')">Resources</button>
+        <button (click)="searchQuery.set('reservation')">Reservations</button>
+        <button (click)="searchQuery.set('account')">Account</button>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="visual-orbit orbit-one"></div>
+      <div class="visual-orbit orbit-two"></div>
+
+      <div class="visual-center">
+        <span class="brand-mark">
+          <i></i><i></i><i></i><i></i>
+        </span>
+      </div>
+
+      <div class="floating-card card-one">
+        <svg lucideCheckCircle2></svg>
+        <div>
+          <strong>Resources</strong>
+          <small>Management</small>
+        </div>
+      </div>
+
+      <div class="floating-card card-two">
+        <svg lucideMessageCircle></svg>
+        <div>
+          <strong>Need assistance?</strong>
+          <small>We're here to help</small>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- QUICK ACCESS -->
+  <section class="quick-access">
+
+    <div class="section-heading">
+      <div>
+        <span class="section-eyebrow">EXPLORE SUPPORT</span>
+        <h2>What do you need help with?</h2>
+        <p>Browse our support resources by category.</p>
+      </div>
+    </div>
+
+    <div class="category-grid">
+
+      @for (category of categories; track category.title) {
+
+        <button
+          class="category-card"
+          (click)="setCategory(category.title === 'Getting started'
+            ? 'All' : category.title)">
+
+          <span class="category-icon" [class]="category.color">
+            @switch (category.icon) {
+              @case ('book') { <svg lucideBookOpen></svg> }
+              @case ('calendar') { <svg lucideCalendarCheck></svg> }
+              @case ('shield') { <svg lucideShieldCheck></svg> }
+              @case ('technical') { <svg lucideZap></svg> }
+            }
+          </span>
+
+          <span class="category-content">
+            <strong>{{ category.title }}</strong>
+            <small>{{ category.description }}</small>
+            <span class="category-count">{{ category.count }}</span>
+          </span>
+
+          <svg class="category-arrow" lucideArrowRight></svg>
+
+        </button>
+
+      }
+
+    </div>
+
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section">
+
+    <div class="faq-heading">
+      <div>
+        <span class="section-eyebrow">KNOWLEDGE BASE</span>
+        <h2>Frequently asked questions</h2>
+        <p>Quick answers to common questions about Holdpoint.</p>
+      </div>
+
+      <button class="view-all" (click)="setCategory('All')">
+        View all questions
+        <svg lucideArrowRight></svg>
+      </button>
+    </div>
+
+    <div class="faq-layout">
+
+      <aside class="faq-sidebar">
+        <span class="sidebar-title">CATEGORIES</span>
+
+        @for (category of ['All', 'Resource management',
+          'Account & security', 'Technical support']; track category) {
+
+          <button
+            [class.active]="activeCategory() === category"
+            (click)="setCategory(category)">
+
+            {{ category }}
+
+            @if (activeCategory() === category) {
+              <svg lucideChevronRight></svg>
+            }
+
+          </button>
+        }
+      </aside>
+
+      <div class="faq-list">
+
+        @for (faq of filteredFaqs(); track faq.question; let i = $index) {
+
+          <article class="faq-item"
+            [class.expanded]="expandedFaq() === i">
+
+            <button class="faq-question" (click)="toggleFaq(i)">
+
+              <span>{{ faq.question }}</span>
+
+              <svg
+                [class.rotated]="expandedFaq() === i"
+                lucideChevronDown>
+              </svg>
+
+            </button>
+
+            @if (expandedFaq() === i) {
+              <div class="faq-answer">
+                {{ faq.answer }}
+              </div>
+            }
+
+          </article>
+
+        } @empty {
+          <div class="empty-state">
+            <svg lucideSearchX></svg>
+            <strong>No matching questions found</strong>
+            <p>Try a different search term or category.</p>
+            <button (click)="searchQuery.set(''); setCategory('All')">
+              Clear filters
+            </button>
+          </div>
+        }
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- CONTACT BANNER -->
+  <section class="contact-banner">
+
+    <div class="contact-icon">
+      <svg lucideHeadphones></svg>
+    </div>
+
+    <div class="contact-copy">
+      <span>NEED MORE HELP?</span>
+      <h2>Can't find what you're looking for?</h2>
+      <p>Send us a support request and describe how we can help.</p>
+    </div>
+
+    <button (click)="openRequestForm()">
+      Contact support
+      <svg lucideArrowRight></svg>
+    </button>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="support-footer">
+    <div class="footer-brand">
+      <span class="brand-mark">
+        <i></i><i></i><i></i><i></i>
+      </span>
+      <strong>Holdpoint</strong>
+      <span>Support Center</span>
+    </div>
+
+    <p>Helping you get more out of your workspace.</p>
+
+    <span class="footer-copyright">
+      © {{ 2026 }} Holdpoint. All rights reserved.
+    </span>
+  </footer>
+
+</div>
+
+
+<!-- REQUEST MODAL -->
+@if (showRequestForm()) {
+
+  <div class="modal-backdrop" (click)="closeRequestForm()">
+
+    <section
+      class="request-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="request-title"
+      (click)="$event.stopPropagation()">
+
+      <button class="modal-close" (click)="closeRequestForm()">
+        <svg lucideX></svg>
+      </button>
+
+      @if (!submitted()) {
+
+        <div class="modal-heading">
+          <span class="modal-icon">
+            <svg lucideMessageCircle></svg>
+          </span>
+
+          <span>SUPPORT REQUEST</span>
+          <h2 id="request-title">How can we help?</h2>
+          <p>Provide some details about your issue.</p>
+        </div>
+
+        <form class="request-form" (ngSubmit)="submitRequest()">
+
+          <label for="subject">Subject</label>
+          <input
+            id="subject"
+            placeholder="Briefly describe your issue"
+            [ngModel]="request().subject"
+            (ngModelChange)="updateRequest('subject', $event)"
+            name="subject"
+            required
+          />
+
+          <label for="email">Email address</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            [ngModel]="request().email"
+            (ngModelChange)="updateRequest('email', $event)"
+            name="email"
+            required
+          />
+
+          <label for="priority">Priority</label>
+          <select
+            id="priority"
+            [ngModel]="request().priority"
+            (ngModelChange)="updateRequest('priority', $event)"
+            name="priority">
+
+            <option>Low</option>
+            <option>Normal</option>
+            <option>High</option>
+
+          </select>
+
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            rows="5"
+            placeholder="Explain what happened and what you expected..."
+            [ngModel]="request().description"
+            (ngModelChange)="updateRequest('description', $event)"
+            name="description"
+            required>
+          </textarea>
+
+          <button
+            type="submit"
+            class="submit-request"
+            [disabled]="!requestValid()">
+
+            <svg lucideSend></svg>
+            Submit request
+
+          </button>
+
+          <p class="form-note">
+            Please do not include passwords or sensitive credentials.
+          </p>
+
+        </form>
+
+      } @else {
+
+        <div class="success-state">
+          <span class="success-icon">
+            <svg lucideCheckCircle2></svg>
+          </span>
+
+          <h2>Request prepared</h2>
+          <p>
+            Your request has passed the local form validation.
+            Connect the support API to submit it and receive a ticket number.
+          </p>
+
+          <button class="submit-request" (click)="resetRequest()">
+            Back to Support Center
+          </button>
+        </div>
+
+      }
+
+    </section>
+
+  </div>
+
+}

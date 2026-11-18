@@ -1,0 +1,664 @@
+<div class="activity-page">
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+
+    <div class="heading-content">
+
+      <div class="breadcrumb">
+        <a routerLink="/console">Overview</a>
+        <span class="separator">/</span>
+        <span>Administration</span>
+        <span class="separator">/</span>
+        <span class="current">Activity log</span>
+      </div>
+
+      <h1>Activity log</h1>
+
+      <p>
+        Monitor workspace activity and keep track of important operations.
+      </p>
+
+    </div>
+
+    <div class="header-meta">
+      <div class="live-indicator">
+        <span></span>
+        Audit history
+      </div>
+    </div>
+
+  </header>
+
+
+  <!-- STATISTICS -->
+  <section class="stats-grid">
+
+    <article class="stat-card">
+
+      <div class="stat-heading">
+        <span class="stat-label">TOTAL EVENTS</span>
+
+        <div class="stat-icon blue">
+          <svg viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.8">
+            <path d="M4 5h16M4 12h16M4 19h16"/>
+            <circle cx="2.5" cy="5" r=".5"/>
+            <circle cx="2.5" cy="12" r=".5"/>
+            <circle cx="2.5" cy="19" r=".5"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="stat-number">{{ totalEvents() }}</div>
+
+      <div class="stat-footer">Recorded activity entries</div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-heading">
+        <span class="stat-label">RESOURCE EVENTS</span>
+
+        <div class="stat-icon violet">
+          <svg viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.8">
+            <path d="m12 3 9 5-9 5-9-5 9-5Z"/>
+            <path d="m3 12 9 5 9-5"/>
+            <path d="m3 16 9 5 9-5"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="stat-number">{{ resourceEvents() }}</div>
+
+      <div class="stat-footer">Resource changes and updates</div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-heading">
+        <span class="stat-label">RESERVATION EVENTS</span>
+
+        <div class="stat-icon green">
+          <svg viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="4" width="18" height="17" rx="2"/>
+            <path d="M16 2v4M8 2v4M3 10h18"/>
+            <path d="m9 15 2 2 4-4"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="stat-number">{{ reservationEvents() }}</div>
+
+      <div class="stat-footer">Holds and booking operations</div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-heading">
+        <span class="stat-label">TEAM EVENTS</span>
+
+        <div class="stat-icon orange">
+          <svg viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.8">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="stat-number">{{ teamEvents() }}</div>
+
+      <div class="stat-footer">Member and access changes</div>
+
+    </article>
+
+  </section>
+
+
+  <!-- ACTIVITY PANEL -->
+  <section class="panel activity-panel">
+
+    <div class="panel-heading">
+
+      <div>
+        <span class="section-label">WORKSPACE AUDIT TRAIL</span>
+
+        <h2>Recent activity</h2>
+
+        <p>
+          A chronological record of important workspace events.
+        </p>
+      </div>
+
+    </div>
+
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+
+      <div class="search-box">
+
+        <svg viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="m16 16 4 4"/>
+        </svg>
+
+        <input
+          type="search"
+          placeholder="Search actor, action or resource..."
+          [value]="searchTerm()"
+          (input)="onSearch($event)"
+          aria-label="Search activity log">
+
+      </div>
+
+
+      <div class="filter-tabs" aria-label="Activity category filters">
+
+        <button
+          type="button"
+          [class.active]="activeFilter() === 'ALL'"
+          (click)="setFilter('ALL')">
+
+          All
+          <span>{{ countFor('ALL') }}</span>
+
+        </button>
+
+        <button
+          type="button"
+          [class.active]="activeFilter() === 'RESOURCE'"
+          (click)="setFilter('RESOURCE')">
+          Resources
+        </button>
+
+        <button
+          type="button"
+          [class.active]="activeFilter() === 'RESERVATION'"
+          (click)="setFilter('RESERVATION')">
+          Reservations
+        </button>
+
+        <button
+          type="button"
+          [class.active]="activeFilter() === 'TEAM'"
+          (click)="setFilter('TEAM')">
+          Team
+        </button>
+
+        <button
+          type="button"
+          [class.active]="activeFilter() === 'SECURITY'"
+          (click)="setFilter('SECURITY')">
+          Security
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="table-summary">
+
+      <span>
+        Showing
+        <strong>{{ visibleActivities().length }}</strong>
+        of
+        <strong>{{ filteredActivities().length }}</strong>
+        events
+      </span>
+
+      <button
+        type="button"
+        class="clear-button"
+        (click)="clearFilters()">
+        Clear filters
+      </button>
+
+    </div>
+
+
+    <!-- ACTIVITY TABLE -->
+    <div class="table-scroll">
+
+      <table class="activity-table">
+
+        <thead>
+          <tr>
+            <th>ACTIVITY</th>
+            <th>ACTOR</th>
+            <th>TARGET</th>
+            <th>DATE &amp; TIME</th>
+            <th>RESULT</th>
+            <th class="action-column">DETAILS</th>
+          </tr>
+        </thead>
+
+
+        <tbody>
+
+          @for (activity of visibleActivities(); track activity.id) {
+
+            <tr>
+
+              <!-- ACTIVITY -->
+              <td>
+
+                <div class="activity-cell">
+
+                  <div
+                    class="activity-icon"
+                    [class.resource]="activity.category === 'RESOURCE'"
+                    [class.reservation]="activity.category === 'RESERVATION'"
+                    [class.team]="activity.category === 'TEAM'"
+                    [class.security]="activity.category === 'SECURITY'">
+
+                    @switch (activity.category) {
+
+                      @case ('RESOURCE') {
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8">
+                          <path d="m12 3 9 5-9 5-9-5 9-5Z"/>
+                          <path d="m3 12 9 5 9-5"/>
+                        </svg>
+                      }
+
+                      @case ('RESERVATION') {
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8">
+                          <rect x="3" y="4" width="18" height="17" rx="2"/>
+                          <path d="M16 2v4M8 2v4M3 10h18"/>
+                        </svg>
+                      }
+
+                      @case ('TEAM') {
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8">
+                          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                          <circle cx="9" cy="7" r="4"/>
+                          <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                        </svg>
+                      }
+
+                      @case ('SECURITY') {
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8">
+                          <path d="M12 3 20 7v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"/>
+                          <path d="M12 8v4"/>
+                          <path d="M12 16h.01"/>
+                        </svg>
+                      }
+
+                    }
+
+                  </div>
+
+                  <div class="activity-info">
+
+                    <strong>{{ activity.action }}</strong>
+
+                    <small>
+                      {{ categoryLabel(activity.category) }}
+                      <span class="dot-separator">·</span>
+                      {{ activity.id }}
+                    </small>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+
+              <!-- ACTOR -->
+              <td>
+
+                <div class="actor-cell">
+
+                  <div
+                    class="actor-avatar"
+                    [class.system-avatar]="activity.actorRole === 'System'"
+                    [class.unknown-avatar]="activity.actorRole === 'Unknown'">
+
+                    {{ initials(activity.actorName) }}
+
+                  </div>
+
+                  <div class="actor-info">
+
+                    <strong>{{ activity.actorName }}</strong>
+
+                    <small>{{ activity.actorRole }}</small>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+
+              <!-- TARGET -->
+              <td>
+
+                <div class="target-cell">
+
+                  <strong>{{ activity.target }}</strong>
+                  <small>{{ activity.targetType }}</small>
+
+                </div>
+
+              </td>
+
+
+              <!-- DATE -->
+              <td class="date-cell">
+
+                {{ activity.occurredAt | date:'dd MMM yyyy' }}
+
+                <small>
+                  {{ activity.occurredAt | date:'h:mm a' }}
+                </small>
+
+              </td>
+
+
+              <!-- RESULT -->
+              <td>
+
+                <span
+                  class="outcome-chip"
+                  [class.success]="activity.outcome === 'SUCCESS'"
+                  [class.failed]="activity.outcome === 'FAILED'">
+
+                  <span class="outcome-indicator"></span>
+
+                  {{ outcomeLabel(activity.outcome) }}
+
+                </span>
+
+              </td>
+
+
+              <!-- DETAILS -->
+              <td class="action-column">
+
+                <button
+                  type="button"
+                  class="table-action"
+                  title="View event details"
+                  aria-label="View event details"
+                  (click)="openDetails(activity)">
+
+                  <svg viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="1.8">
+                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+
+                </button>
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+
+      <!-- EMPTY STATE -->
+      @if (filteredActivities().length === 0) {
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="m16 16 4 4"/>
+            </svg>
+          </div>
+
+          <h3>No activity found</h3>
+
+          <p>
+            There are no events matching your search.
+            Try another keyword or choose a different category.
+          </p>
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="clearFilters()">
+            Clear filters
+          </button>
+
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- SHOW MORE -->
+    @if (filteredActivities().length > 8) {
+
+      <div class="table-footer">
+
+        <span>
+          {{ showAll() ? 'All matching events are displayed.' : 'More activity is available.' }}
+        </span>
+
+        <button
+          type="button"
+          class="show-more-button"
+          (click)="toggleShowAll()">
+
+          {{ showAll() ? 'Show less' : 'View all activity' }}
+
+          <svg viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.8">
+            @if (showAll()) {
+              <path d="m18 15-6-6-6 6"/>
+            } @else {
+              <path d="m9 18 6-6-6-6"/>
+            }
+          </svg>
+
+        </button>
+
+      </div>
+
+    }
+
+  </section>
+
+
+  <!-- ACTIVITY DETAILS MODAL -->
+  @if (selectedActivity(); as activity) {
+
+    <div class="modal-backdrop" (click)="closeDetails()">
+
+      <section
+        class="details-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="activity-details-title"
+        (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+
+          <div>
+            <span class="section-label">AUDIT EVENT</span>
+            <h2 id="activity-details-title">Activity details</h2>
+          </div>
+
+          <button
+            type="button"
+            class="modal-close"
+            aria-label="Close details"
+            (click)="closeDetails()">
+
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8">
+              <path d="m18 6-12 12M6 6l12 12"/>
+            </svg>
+
+          </button>
+
+        </div>
+
+
+        <div class="event-summary">
+
+          <div
+            class="activity-icon large"
+            [class.resource]="activity.category === 'RESOURCE'"
+            [class.reservation]="activity.category === 'RESERVATION'"
+            [class.team]="activity.category === 'TEAM'"
+            [class.security]="activity.category === 'SECURITY'">
+
+            @switch (activity.category) {
+
+              @case ('RESOURCE') {
+                <svg viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8">
+                  <path d="m12 3 9 5-9 5-9-5 9-5Z"/>
+                  <path d="m3 12 9 5 9-5"/>
+                </svg>
+              }
+
+              @case ('RESERVATION') {
+                <svg viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8">
+                  <rect x="3" y="4" width="18" height="17" rx="2"/>
+                  <path d="M16 2v4M8 2v4M3 10h18"/>
+                </svg>
+              }
+
+              @case ('TEAM') {
+                <svg viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                </svg>
+              }
+
+              @case ('SECURITY') {
+                <svg viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8">
+                  <path d="M12 3 20 7v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"/>
+                </svg>
+              }
+
+            }
+
+          </div>
+
+          <div>
+            <strong>{{ activity.action }}</strong>
+            <span>{{ categoryLabel(activity.category) }}</span>
+          </div>
+
+        </div>
+
+
+        <div class="event-reference">
+          <span>EVENT ID</span>
+          <strong>{{ activity.id }}</strong>
+        </div>
+
+
+        <div class="details-list">
+
+          <div class="detail-row">
+            <span>Actor</span>
+            <strong>{{ activity.actorName }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Actor email / identifier</span>
+            <strong>{{ activity.actorEmail }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Role</span>
+            <strong>{{ activity.actorRole }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Target</span>
+            <strong>{{ activity.target }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Target type</span>
+            <strong>{{ activity.targetType }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Date and time</span>
+            <strong>
+              {{ activity.occurredAt | date:'dd MMM yyyy, h:mm:ss a' }}
+            </strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Result</span>
+
+            <span
+              class="outcome-chip"
+              [class.success]="activity.outcome === 'SUCCESS'"
+              [class.failed]="activity.outcome === 'FAILED'">
+
+              <span class="outcome-indicator"></span>
+              {{ outcomeLabel(activity.outcome) }}
+
+            </span>
+          </div>
+
+        </div>
+
+
+        <div class="event-description">
+
+          <span>EVENT DESCRIPTION</span>
+
+          <p>{{ activity.description }}</p>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeDetails()">
+
+            Close
+
+          </button>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  }
+
+</div>

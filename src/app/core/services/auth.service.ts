@@ -1,27 +1,119 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
-import { AuthResponse, LoginRequest, RegisterRequest } from '../models/auth.model';
+import { MeResponse } from '../models/auth.model';
+import { catchError, of, switchMap, tap } from 'rxjs';
+import {  
+  LoginRequest, 
+  LoginResponse, 
+  RegisterRequest , 
+  RegisterResponse , 
+  TokenResponse
+} from '../models/auth.model';
 import { APP_CONFIG } from '../config';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+
+
   private readonly http = inject(HttpClient);
+
   private readonly router = inject(Router);
-  readonly token = signal<string | null>(localStorage.getItem('hp_token'));
-  readonly email = signal<string | null>(localStorage.getItem('hp_email'));
-  readonly name = signal<string | null>(localStorage.getItem('hp_name'));
-  readonly isLoggedIn = computed(() => !!this.token());
-  login(b: LoginRequest) { return this.http.post<AuthResponse>(`${APP_CONFIG.apiBase}/auth/login`, b).pipe(tap(r => this.save(r))); }
-  register(b: RegisterRequest) { return this.http.post<AuthResponse>(`${APP_CONFIG.apiBase}/auth/register`, b).pipe(tap(r => this.save(r))); }
+
+  private readonly userState = signal<MeResponse | null>(null);
+  readonly currentUser = this.userState.asReadonly();
+
+
+  private readonly tokenState = signal<string | null> (null);
+
+  readonly accessToken = this.tokenState.asReadonly();
+
+  readonly isAuthenticated = computed(
+    () =>  this.tokenState() !== null && this.userState() !== null
+  );
+
+
+  private readonly initializedState = signal(false);
+
+  readonly initialized = this.initializedState.asReadonly();
+
+
+
+
+  login(request: LoginRequest) { 
+    return this.http.post<TokenResponse>(
+      `${APP_CONFIG.apiBase}/auth/login`,
+       request,
+       {withCredentials : true}
+      ).pipe(
+
+
+      tap(response => {
+        this.tokenState.set(response.accessToken);
+      }),
+      switchMap(() => this.loadCurrentUser()),
+
+      tap(() => {
+        this.initializedState.set(true);
+        this.router.navigate(['/console/overview']);
+      })
+      )
+  }
+
+  register(request: RegisterRequest) {
+     return this.http.post<RegisterResponse>(`${APP_CONFIG.apiBase}/auth/register`, request); }
+
+
+
+    refreshAccessToken() {
+      return this.http.post<TokenResponse>(
+        `${APP_CONFIG.apiBase}/auth/refresh`,
+        {},
+        {
+          withCredentials: true
+        }
+      ).pipe(
+        tap(response => {
+          this.tokenState.set(response.accessToken);
+        })
+      );
+    }
+
+
+    loadCurrentUser() {
+      return this.http.get<MeResponse>(
+        `${APP_CONFIG.apiBase}/auth/me`
+      ).pipe(
+        tap(user => {
+          this.userState.set(user);
+        })
+      );
+    }
+
+
+
+    initialize() {
+    return this.refreshAccessToken().pipe(
+
+      switchMap(() => this.loadCurrentUser()),
+
+      catchError(() => {
+        this.tokenState.set(null);
+        this.userState.set(null);
+
+        return of(null);
+      }),
+
+      tap(() => {
+        this.initializedState.set(true);
+      })
+    );
+  }
+
+
+
   logout() {
-    ['hp_token', 'hp_email', 'hp_name'].forEach(k => localStorage.removeItem(k));
-    this.token.set(null); this.email.set(null); this.name.set(null);
-    this.router.navigateByUrl('/');
+
   }
-  private save(r: AuthResponse) {
-    localStorage.setItem('hp_token', r.token); localStorage.setItem('hp_email', r.email); localStorage.setItem('hp_name', r.name ?? '');
-    this.token.set(r.token); this.email.set(r.email); this.name.set(r.name ?? null);
-  }
+ 
 }

@@ -1,0 +1,117 @@
+
+<main class="verification-page">
+  <div class="verification-container">
+
+    <a class="brand" routerLink="/">
+      <span class="brand-mark">
+        <i></i><i></i><i></i><i></i>
+      </span>
+      <span>Holdpoint</span>
+    </a>
+
+    <section class="verification-card">
+
+      @if (state() === 'verifying') {
+        <div class="status-icon loading-icon">
+          <span class="spinner"></span>
+        </div>
+
+        <span class="eyebrow">EMAIL VERIFICATION</span>
+        <h1>Verifying your email</h1>
+        <p class="description">
+          Please wait while we securely verify your email address.
+          This should only take a moment.
+        </p>
+      }
+
+      @if (state() === 'success') {
+        <div class="status-icon success-icon">
+          <span class="checkmark">✓</span>
+        </div>
+
+        <span class="eyebrow">VERIFICATION COMPLETE</span>
+        <h1>Your email is verified</h1>
+        <p class="description">
+          Your email address has been successfully verified.
+          Your Holdpoint account is now ready.
+        </p>
+
+        <a class="primary-button" routerLink="/login">
+          Continue to sign in
+          <span>→</span>
+        </a>
+      }
+
+      @if (state() === 'invalid') {
+        <div class="status-icon error-icon">
+          <span>!</span>
+        </div>
+
+        <span class="eyebrow">VERIFICATION FAILED</span>
+        <h1>This link is no longer valid</h1>
+        <p class="description">
+          The verification link may have expired or already been used.
+          You can request a new verification email below.
+        </p>
+
+        <div class="resend-form">
+          <label for="email">Email address</label>
+
+          <input
+            id="email"
+            type="email"
+            placeholder="you@company.com"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+            autocomplete="email"
+          />
+
+          @if (resendError()) {
+            <p class="feedback error-text">{{ resendError() }}</p>
+          }
+
+          @if (resendMessage()) {
+            <p class="feedback success-text">{{ resendMessage() }}</p>
+          }
+
+          <button
+            class="primary-button"
+            type="button"
+            [disabled]="resendLoading()"
+            (click)="resendVerification()"
+          >
+            {{ resendLoading() ? 'Sending...' : 'Send a new link' }}
+          </button>
+        </div>
+      }
+
+      @if (state() === 'missing') {
+        <div class="status-icon error-icon">
+          <span>!</span>
+        </div>
+
+        <span class="eyebrow">MISSING VERIFICATION TOKEN</span>
+        <h1>Verification link incomplete</h1>
+        <p class="description">
+          We couldn't find a verification token in this link.
+          Please open the complete link from your email.
+        </p>
+
+        <a class="secondary-button" routerLink="/login">
+          Back to sign in
+        </a>
+      }
+
+    </section>
+
+    <p class="security-note">
+      <span>🔒</span>
+      Your account security is important to us.
+    </p>
+
+    <footer class="page-footer">
+      © 2026 Holdpoint. All rights reserved.
+    </footer>
+
+  </div>
+</main>

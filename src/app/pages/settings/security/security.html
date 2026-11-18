@@ -1,0 +1,317 @@
+
+<div class="security-page">
+
+  <!-- Header -->
+  <header class="security-header">
+    <div class="heading-content">
+      <div class="breadcrumb">
+        <span>Settings</span>
+        <span class="separator">/</span>
+        <span class="current">Security</span>
+      </div>
+
+      <h1>Security</h1>
+      <p>
+        Manage your account protection, authentication
+        methods and active sessions.
+      </p>
+    </div>
+  </header>
+
+  <!-- Security overview -->
+  <section class="overview-grid">
+
+    <article class="overview-card">
+      <div class="overview-top">
+        <div class="overview-icon blue">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="5" width="18" height="14" rx="2"/>
+            <path d="m3 7 9 6 9-6"/>
+          </svg>
+        </div>
+        <span class="status-chip"
+              [class.verified]="emailVerified()">
+          <span class="status-dot"></span>
+          {{ emailVerified() ? 'Verified' : 'Pending' }}
+        </span>
+      </div>
+
+      <div class="overview-content">
+        <span class="overview-label">EMAIL VERIFICATION</span>
+        <h2>Email address</h2>
+        <p>Your email verification status.</p>
+      </div>
+    </article>
+
+    <article class="overview-card">
+      <div class="overview-top">
+        <div class="overview-icon green">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+        <span class="status-chip verified">
+          <span class="status-dot"></span>
+          Active
+        </span>
+      </div>
+
+      <div class="overview-content">
+        <span class="overview-label">ACCOUNT PROTECTION</span>
+        <h2>Security status</h2>
+        <p>Your account protection overview.</p>
+      </div>
+    </article>
+
+    <article class="overview-card">
+      <div class="overview-top">
+        <div class="overview-icon violet">
+          <svg viewBox="0 0 24 24">
+            <rect x="5" y="2" width="14" height="20" rx="2"/>
+            <path d="M12 18h.01"/>
+          </svg>
+        </div>
+        <span class="status-chip"
+              [class.verified]="twoFactorEnabled()">
+          <span class="status-dot"></span>
+          {{ twoFactorEnabled() ? 'Enabled' : 'Not enabled' }}
+        </span>
+      </div>
+
+      <div class="overview-content">
+        <span class="overview-label">TWO-FACTOR AUTHENTICATION</span>
+        <h2>Extra protection</h2>
+        <p>Add another layer of account security.</p>
+      </div>
+    </article>
+
+    <article class="overview-card">
+      <div class="overview-top">
+        <div class="overview-icon orange">
+          <svg viewBox="0 0 24 24">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <path d="M8 21h8M12 17v4"/>
+          </svg>
+        </div>
+        <span class="count-label">
+          {{ activeSessionsCount }}
+        </span>
+      </div>
+
+      <div class="overview-content">
+        <span class="overview-label">ACTIVE SESSIONS</span>
+        <h2>Connected devices</h2>
+        <p>Devices currently signed in.</p>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- Authentication -->
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <span class="section-label">ACCOUNT ACCESS</span>
+        <h2>Authentication</h2>
+        <p>Manage how you access your Holdpoint account.</p>
+      </div>
+      <div class="heading-icon blue">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="7.5" cy="15.5" r="5.5"/>
+          <path d="m21 2-9.6 9.6M15.5 7.5l3 3M18 5l3 3"/>
+        </svg>
+      </div>
+
+      <div class="setting-info">
+        <strong>Password</strong>
+        <p>Keep your password strong and up to date.</p>
+      </div>
+
+      <button class="btn btn-secondary" type="button" disabled>
+        Change password
+      </button>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-icon">
+        <svg viewBox="0 0 24 24">
+          <rect x="5" y="2" width="14" height="20" rx="2"/>
+          <path d="M12 18h.01"/>
+        </svg>
+      </div>
+
+      <div class="setting-info">
+        <strong>Two-factor authentication</strong>
+        <p>Require an additional verification step when signing in.</p>
+      </div>
+
+      <span class="status-chip"
+            [class.verified]="twoFactorEnabled()">
+        {{ twoFactorEnabled() ? 'Enabled' : 'Not enabled' }}
+      </span>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 4h16v16H4z"/>
+          <path d="m4 7 8 6 8-6"/>
+        </svg>
+      </div>
+
+      <div class="setting-info">
+        <strong>Email verification</strong>
+        <p>Verify your email address to protect account access.</p>
+      </div>
+
+      <span class="status-chip"
+            [class.verified]="emailVerified()">
+        {{ emailVerified() ? 'Verified' : 'Pending' }}
+      </span>
+    </div>
+  </section>
+
+  <!-- Active sessions -->
+  <section class="panel sessions-panel">
+    <div class="panel-heading">
+      <div>
+        <span class="section-label">DEVICE MANAGEMENT</span>
+        <h2>Active sessions</h2>
+        <p>
+          Review devices that currently have access to your account.
+        </p>
+      </div>
+
+      <span class="session-count">
+        {{ activeSessionsCount }} sessions
+      </span>
+    </div>
+
+    <div class="session-list">
+
+      @for (session of sessions(); track session.id) {
+        <div class="session-row">
+
+          <div class="device-icon">
+            @if (session.icon === 'monitor') {
+              <svg viewBox="0 0 24 24">
+                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                <path d="M8 21h8M12 17v4"/>
+              </svg>
+            } @else {
+              <svg viewBox="0 0 24 24">
+                <rect x="5" y="2" width="14" height="20" rx="2"/>
+                <path d="M12 18h.01"/>
+              </svg>
+            }
+          </div>
+
+          <div class="device-info">
+            <div class="device-title">
+              <strong>{{ session.device }}</strong>
+
+              @if (session.current) {
+                <span class="current-badge">Current device</span>
+              }
+            </div>
+
+            <p>
+              {{ session.browser }}
+              <span class="separator">·</span>
+              {{ session.location }}
+            </p>
+
+            <span class="last-active">
+              {{ session.lastActive }}
+            </span>
+          </div>
+
+          @if (!session.current) {
+            <button
+              type="button"
+              class="revoke-btn"
+              (click)="removeDemoSession(session.id)">
+              Revoke
+            </button>
+          }
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <p>No active sessions found.</p>
+        </div>
+      }
+
+    </div>
+
+    <div class="panel-footer">
+      <span>
+        <span class="online-dot"></span>
+        Your current session is active
+      </span>
+
+      <button type="button" class="text-action" disabled>
+        Sign out all other devices
+      </button>
+    </div>
+  </section>
+
+  <!-- Security activity -->
+  <section class="panel activity-panel">
+    <div class="panel-heading">
+      <div>
+        <span class="section-label">ACCOUNT MONITORING</span>
+        <h2>Security activity</h2>
+        <p>Review important security-related account events.</p>
+      </div>
+    </div>
+
+    <div class="activity-list">
+      @for (event of events; track event.id) {
+        <div class="activity-row">
+          <div class="activity-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+          </div>
+
+          <div class="activity-info">
+            <strong>{{ event.title }}</strong>
+            <p>{{ event.description }}</p>
+          </div>
+
+          <span class="activity-date">{{ event.date }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Security notice -->
+  <div class="security-notice">
+    <div class="notice-icon">
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 16v-4M12 8h.01"/>
+      </svg>
+    </div>
+
+    <div>
+      <strong>Stay protected</strong>
+      <p>
+        Never share your password or verification codes.
+        Holdpoint will never ask you to disclose them.
+      </p>
+    </div>
+  </div>
+
+</div>

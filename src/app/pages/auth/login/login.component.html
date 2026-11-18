@@ -1,20 +1,221 @@
-<div class="auth">
-  <form class="ac" [formGroup]="form" (ngSubmit)="submit()">
-  <a routerLink="/" class="brand">
-    <span class="mark"><i></i><i></i><i></i><i></i></span>Holdpoint</a>
-  <h1>Sign in</h1>
-  <p class="sub">to continue to the Holdpoint console</p>
-  <div class="gf">
-    <input id="e" type="email" formControlName="email" placeholder=" " autocomplete="email" />
-    <label for="e">Email</label>
+
+<div class="auth-page">
+
+  <div class="auth-shell">
+
+    <!-- Left Branding Panel -->
+    <aside class="auth-aside">
+
+      <a routerLink="/" class="brand">
+        <span class="brand-mark">
+          <i></i><i></i><i></i><i></i>
+        </span>
+        <span>Holdpoint</span>
+      </a>
+
+      <div class="aside-content">
+
+        <span class="eyebrow">
+          <span class="status-dot"></span>
+          YOUR WORKSPACE AWAITS
+        </span>
+
+        <h2>
+          Everything under control.
+          <span>Every time.</span>
+        </h2>
+
+        <p>
+          Welcome back. Continue managing your resources,
+          monitoring reservations, and keeping your operations
+          running smoothly.
+        </p>
+
+        <div class="feature-list">
+
+          <div class="feature">
+            <span class="feature-icon">
+              <span class="ms">dashboard</span>
+            </span>
+            <div>
+              <strong>Your workspace</strong>
+              <small>Everything organized in one place.</small>
+            </div>
+          </div>
+
+          <div class="feature">
+            <span class="feature-icon">
+              <span class="ms">inventory_2</span>
+            </span>
+            <div>
+              <strong>Resource monitoring</strong>
+              <small>Stay on top of capacity and availability.</small>
+            </div>
+          </div>
+
+          <div class="feature">
+            <span class="feature-icon">
+              <span class="ms">verified_user</span>
+            </span>
+            <div>
+              <strong>Reliable operations</strong>
+              <small>Manage every reservation with confidence.</small>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="aside-footer">
+        <span>© 2026 Holdpoint</span>
+        <span>Built for better operations.</span>
+      </div>
+
+    </aside>
+
+    <!-- Login Area -->
+    <main class="auth-main">
+
+      <div class="mobile-brand">
+        <a routerLink="/" class="brand">
+          <span class="brand-mark">
+            <i></i><i></i><i></i><i></i>
+          </span>
+          <span>Holdpoint</span>
+        </a>
+      </div>
+
+      <div class="form-container">
+
+        <div class="form-heading">
+
+          <span class="form-label">WELCOME BACK</span>
+
+          <h1>Sign in</h1>
+
+          <p>
+            Sign in to continue to your Holdpoint workspace.
+          </p>
+
+        </div>
+
+        <form class="ac" [formGroup]="form" (ngSubmit)="submit()">
+
+          <!-- Email -->
+          <div class="field">
+
+            <label for="e">Email address</label>
+
+            <div class="input-wrap">
+
+              <span class="ms field-icon">
+                <svg lucideMail></svg>
+              </span>
+
+              <input
+                id="e"
+                type="email"
+                formControlName="email"
+                placeholder="you@company.com"
+                autocomplete="email"
+              />
+
+            </div>
+
+          </div>
+
+          <!-- Password -->
+          <div class="field">
+
+            <label for="p">Password</label>
+
+            <div class="input-wrap">
+
+              <span class="ms field-icon">
+                <svg lucideLock></svg>
+              </span>
+
+              <input
+                id="p"
+                type="password"
+                formControlName="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+              />
+
+            </div>
+
+          </div>
+
+          <!-- Error -->
+          @if (error()) {
+
+            <div class="error-message" role="alert">
+
+              <span class="ms error-icon">
+                <svg lucideCircleX></svg>
+              </span>
+
+              <span>{{ error() }}</span>
+
+            </div>
+
+          }
+
+          <!-- Demo Account -->
+ 
+
+          <!-- Submit -->
+          <button
+            type="submit"
+            class="submit-btn"
+            [disabled]="form.invalid || busy()">
+
+            <span>
+              {{ busy() ? 'Signing in...' : 'Sign in to Holdpoint' }}
+            </span>
+
+            @if (!busy()) {
+              <span class="ms arrow">
+                <svg lucideArrowBigRight></svg>
+              </span>
+            }
+
+            @if (busy()) {
+              <span class="spinner"></span>
+            }
+
+          </button>
+
+          <!-- Register Link -->
+          <div class="form-divider">
+            <span>NEW TO HOLDPOINT?</span>
+          </div>
+
+          <a routerLink="/register" class="signin-link">
+            Create a new account
+            <span class="ms">
+              <svg lucideArrowBigRight></svg>
+            </span>
+          </a>
+
+        </form>
+
+        <p class="legal-note">
+          Your workspace is protected.
+          Sign in to access your resources securely.
+        </p>
+
+      </div>
+
+      <div class="main-footer">
+        <span>Secure account access</span>
+        <span>Holdpoint Platform</span>
+      </div>
+
+    </main>
+
   </div>
-  <div class="gf">
-    <input id="p" type="password" formControlName="password" placeholder=" " autocomplete="current-password" />
-    <label for="p">Password</label>
-  </div>
-  @if (error()) {
-    <p class="err" role="alert">
-      <span class="ms">error</span>{{ error() }}</p>}
-  @if (mock) {<p class="demo">Demo account: demo&#64;holdora.dev / demo1234</p>}
-  <div class="alt"><a routerLink="/register">Create account</a><button class="btn pri" [disabled]="form.invalid || busy()">{{ busy() ? 'Signing in…' : 'Sign in' }}</button></div>
-</form></div>
+
+</div>

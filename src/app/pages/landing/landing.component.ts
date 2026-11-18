@@ -1,8 +1,35 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+
+import {
+  LucideArrowUpRight,
+  LucideArrowRight,
+  LucideLayoutDashboard,
+  LucideBookmarkCheck,
+  LucideShieldCheck,
+  LucideCheck,
+  LucideGauge,
+  LucideLayers,
+  LucideDatabase,
+  LucideClock3,
+  LucideBadgeCheck
+} from '@lucide/angular';
+
 @Component({ 
   selector: 'app-landing', 
-  imports: [RouterLink], 
+  imports: [RouterLink,
+  LucideArrowUpRight,
+  LucideArrowRight,
+  LucideLayoutDashboard,
+  LucideBookmarkCheck,
+  LucideShieldCheck,
+  LucideCheck,
+  LucideGauge,
+  LucideLayers,
+  LucideDatabase,
+  LucideClock3,
+  LucideBadgeCheck
+  ], 
   templateUrl: './landing.component.html' ,
   styleUrl : './landing.component.css'
 

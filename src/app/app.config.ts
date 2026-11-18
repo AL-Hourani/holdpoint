@@ -1,13 +1,57 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, inject, provideAppInitializer } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
-import { APP_CONFIG } from './core/config';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { mockBackendInterceptor } from './core/interceptors/mock-backend.interceptor';
+import { AuthService } from './core/services/auth.service';
+
+import { 
+  provideLucideIcons, 
+  LucideArrowLeft,
+  LucideAlarmClock ,
+  LucideArrowRight,
+  LucideBlocks,
+  LucideMail,
+  LucideLock,
+  LucideArrowBigRight,
+  LucideCircleX,
+  LucideUserRound,
+   LucidePanelLeft,
+  LucideSearch,
+  LucidePlus,
+  LucideLogOut,
+  LucideLayersPlus,
+  LucideChevronRight,
+  LucidePackagePlus
+  
+} from '@lucide/angular';
+
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withInterceptors([authInterceptor, ...(APP_CONFIG.useMock ? [mockBackendInterceptor] : [])])),
+    provideAppInitializer(()=>
+      inject(AuthService).initialize()
+    ),
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideLucideIcons(
+      LucideArrowLeft,
+      LucideAlarmClock,
+      LucideArrowRight,
+      LucideMail,
+      LucideLock,
+      LucideArrowBigRight,
+      LucideCircleX,
+      LucideUserRound,
+      LucidePanelLeft,
+      LucideSearch,
+      LucidePlus,
+      LucideLogOut,
+      LucideLayersPlus,
+      LucideLayersPlus,
+      LucideChevronRight,
+      LucidePackagePlus,
+      LucideBlocks
+    ),
   ],
 };

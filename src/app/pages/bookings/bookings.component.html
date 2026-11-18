@@ -1,0 +1,488 @@
+<div class="bookings-page">
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+
+    <div class="heading-content">
+
+      <div class="breadcrumb">
+        <a routerLink="/console">Overview</a>
+        <span class="separator">/</span>
+        <span>Operations</span>
+        <span class="separator">/</span>
+        <span class="current">Bookings</span>
+      </div>
+
+      <h1>Bookings</h1>
+
+      <p>
+        Track confirmed reservations and manage committed resource capacity.
+      </p>
+
+    </div>
+
+    <div class="header-actions">
+
+      <a
+        routerLink="/console/holds"
+        class="btn btn-secondary">
+
+        <svg viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="4" width="18" height="17" rx="2"/>
+          <path d="M16 2v4M8 2v4M3 10h18"/>
+        </svg>
+
+        View holds
+      </a>
+
+      <a
+        routerLink="/console/holds/new"
+        class="btn btn-primary">
+
+        <svg viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+
+        Create hold
+      </a>
+
+    </div>
+
+  </header>
+
+
+  <!-- STATISTICS -->
+  <section class="stats-grid">
+
+    <article class="stat-card">
+
+      <div class="stat-heading">
+        <span class="stat-label">TOTAL BOOKINGS</span>
+
+        <div class="stat-icon blue">
+          <svg viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="4" width="18" height="17" rx="2"/>
+            <path d="M16 2v4M8 2v4M3 10h18"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="stat-number">
+        {{ totalBookings() }}
+      </div>
+
+      <div class="stat-footer">
+        <span>All booking records</span>
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-heading">
+        <span class="stat-label">CONFIRMED</span>
+
+        <div class="stat-icon green">
+          <svg viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="m8 12 2.5 2.5L16 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="stat-number">
+        {{ confirmedBookings() }}
+      </div>
+
+      <div class="stat-footer">
+        <span>Successfully confirmed</span>
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-heading">
+        <span class="stat-label">CANCELLED</span>
+
+        <div class="stat-icon orange">
+          <svg viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="m9 9 6 6m0-6-6 6"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="stat-number">
+        {{ cancelledBookings() }}
+      </div>
+
+      <div class="stat-footer">
+        <span>Cancelled records</span>
+      </div>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <div class="stat-heading">
+        <span class="stat-label">UNITS COMMITTED</span>
+
+        <div class="stat-icon violet">
+          <svg viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.8">
+            <path d="m12 3 9 5-9 5-9-5 9-5Z"/>
+            <path d="m3 12 9 5 9-5M3 16l9 5 9-5"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="stat-number">
+        {{ committedUnits() }}
+        <small>units</small>
+      </div>
+
+      <div class="stat-footer">
+        <span>Across confirmed bookings</span>
+      </div>
+
+    </article>
+
+  </section>
+
+
+  <!-- BOOKINGS PANEL -->
+  <section class="panel bookings-panel">
+
+    <div class="panel-heading">
+
+      <div>
+        <span class="section-label">BOOKING MANAGEMENT</span>
+
+        <h2>All bookings</h2>
+
+        <p>
+          View and track your confirmed resource reservations.
+        </p>
+      </div>
+
+    </div>
+
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+
+      <div class="search-box">
+
+        <svg viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="m16 16 4 4"/>
+        </svg>
+
+        <input
+          type="search"
+          placeholder="Search by reference or resource..."
+          [value]="searchTerm()"
+          (input)="onSearch($event)"
+          aria-label="Search bookings">
+
+      </div>
+
+
+      <div class="filter-tabs" aria-label="Booking status filters">
+
+        <button
+          type="button"
+          [class.active]="activeFilter() === 'ALL'"
+          (click)="setFilter('ALL')">
+
+          All
+
+          <span>{{ totalBookings() }}</span>
+        </button>
+
+        <button
+          type="button"
+          [class.active]="activeFilter() === 'CONFIRMED'"
+          (click)="setFilter('CONFIRMED')">
+
+          Confirmed
+        </button>
+
+        <button
+          type="button"
+          [class.active]="activeFilter() === 'CANCELLED'"
+          (click)="setFilter('CANCELLED')">
+
+          Cancelled
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- TABLE SUMMARY -->
+    <div class="table-summary">
+      <span>
+        Showing
+        <strong>{{ filteredBookings().length }}</strong>
+        of
+        <strong>{{ totalBookings() }}</strong>
+        bookings
+      </span>
+    </div>
+
+
+    <!-- TABLE -->
+    <div class="table-scroll">
+
+      <table class="booking-table">
+
+        <thead>
+          <tr>
+            <th>BOOKING REFERENCE</th>
+            <th>RESOURCE</th>
+            <th>QUANTITY</th>
+            <th>CREATED</th>
+            <th>STATUS</th>
+            <th class="action-column">ACTION</th>
+          </tr>
+        </thead>
+
+
+        <tbody>
+
+          @for (booking of filteredBookings(); track booking.reference) {
+
+            <tr>
+
+              <td>
+                <div class="reference-cell">
+                  <strong>{{ booking.reference }}</strong>
+                  <small>Reservation record</small>
+                </div>
+              </td>
+
+
+              <td>
+                <div class="resource-cell">
+                  <div class="resource-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.7">
+                      <path d="m12 3 9 5-9 5-9-5 9-5Z"/>
+                      <path d="m3 12 9 5 9-5"/>
+                      <path d="m3 16 9 5 9-5"/>
+                    </svg>
+                  </div>
+
+                  <div>
+                    <strong>{{ booking.resourceName }}</strong>
+                    <small>{{ booking.resourceKey }}</small>
+                  </div>
+                </div>
+              </td>
+
+
+              <td>
+                <strong class="quantity-value">
+                  {{ booking.quantity }}
+                </strong>
+
+                <span class="quantity-unit">units</span>
+              </td>
+
+
+              <td class="date-cell">
+                {{ booking.createdAt | date:'dd MMM yyyy, h:mm a' }}
+              </td>
+
+
+              <td>
+                <span
+                  class="status-chip"
+                  [class.confirmed]="booking.status === 'CONFIRMED'"
+                  [class.cancelled]="booking.status === 'CANCELLED'">
+
+                  <span class="status-indicator"></span>
+
+                  {{ statusLabel(booking.status) }}
+
+                </span>
+              </td>
+
+
+              <td class="action-column">
+
+                <button
+                  type="button"
+                  class="table-action"
+                  aria-label="View booking details"
+                  title="View details"
+                  (click)="openDetails(booking)">
+
+                  <svg viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="1.8">
+                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+
+                </button>
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+
+      <!-- EMPTY STATE -->
+      @if (filteredBookings().length === 0) {
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8">
+              <circle cx="11" cy="11" r="7"/>
+              <path d="m16 16 4 4"/>
+            </svg>
+          </div>
+
+          <h3>No bookings found</h3>
+
+          <p>
+            We couldn't find any bookings matching your search.
+            Try another reference or change the selected filter.
+          </p>
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="searchTerm.set(''); setFilter('ALL')">
+
+            Clear filters
+          </button>
+
+        </div>
+
+      }
+
+    </div>
+
+  </section>
+
+
+  <!-- BOOKING DETAILS MODAL -->
+  @if (selectedBooking(); as booking) {
+
+    <div class="modal-backdrop">
+
+      <section
+        class="details-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="booking-details-title">
+
+        <div class="modal-header">
+
+          <div>
+            <span class="section-label">BOOKING INFORMATION</span>
+            <h2 id="booking-details-title">Booking details</h2>
+          </div>
+
+          <button
+            type="button"
+            class="modal-close"
+            aria-label="Close details"
+            (click)="closeDetails()">
+
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8">
+              <path d="m18 6-12 12M6 6l12 12"/>
+            </svg>
+
+          </button>
+
+        </div>
+
+
+        <div class="modal-reference">
+          <span>BOOKING REFERENCE</span>
+          <strong>{{ booking.reference }}</strong>
+        </div>
+
+
+        <div class="details-list">
+
+          <div class="detail-row">
+            <span>Resource</span>
+            <strong>{{ booking.resourceName }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Resource key</span>
+            <strong>{{ booking.resourceKey }}</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Quantity</span>
+            <strong>{{ booking.quantity }} units</strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Created</span>
+            <strong>
+              {{ booking.createdAt | date:'dd MMM yyyy, h:mm a' }}
+            </strong>
+          </div>
+
+          <div class="detail-row">
+            <span>Status</span>
+
+            <span
+              class="status-chip"
+              [class.confirmed]="booking.status === 'CONFIRMED'"
+              [class.cancelled]="booking.status === 'CANCELLED'">
+
+              <span class="status-indicator"></span>
+              {{ statusLabel(booking.status) }}
+
+            </span>
+          </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeDetails()">
+
+            Close
+          </button>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  }
+
+</div>

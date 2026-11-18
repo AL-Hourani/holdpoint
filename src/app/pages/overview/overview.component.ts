@@ -7,10 +7,47 @@ import { Resource } from '../../core/models/resource.model';
 import { HoldService } from '../../core/services/hold.service';
 import { ResourceService } from '../../core/services/resource.service';
 import { barClass, held, holdChip, util } from '../../core/util';
+import {
+  LucideBookmarkPlus,
+  LucidePlus,
+  LucideCircleAlert,
+  LucidePackage,
+  LucideBookmarkCheck,
+  LucideLayers,
+  LucideBoxes,
+  LucideGauge,
+  LucideDatabase,
+  LucideActivity,
+  LucideArrowUpRight,
+  LucideChevronRight,
+  LucideArrowRight,
+  LucidePackageOpen,
+  LucideChartNoAxesCombined,
+  LucideCalendarClock,
+  LucidePackagePlus
+} from '@lucide/angular';
 
 @Component({ 
   selector: 'app-overview', 
-  imports: [RouterLink, DatePipe], 
+  imports: [RouterLink, DatePipe,
+  LucideBookmarkPlus,
+  LucidePlus,
+  LucideCircleAlert,
+  LucidePackage,
+  LucideBookmarkCheck,
+  LucideLayers,
+  LucideBoxes,
+  LucideGauge,
+  LucideDatabase,
+  LucideActivity,
+  LucideArrowUpRight,
+  LucideChevronRight,
+  LucideArrowRight,
+  LucidePackageOpen,
+  LucideChartNoAxesCombined,
+  LucideCalendarClock,
+  LucidePackagePlus
+  ], 
   templateUrl: './overview.component.html' ,
   styleUrl :'./overview.component.css'
 })
@@ -21,7 +58,7 @@ export class OverviewComponent {
   readonly totalCap = computed(() => this.resources().reduce((s, r) => s + r.capacity, 0));
   readonly totalHeld = computed(() => this.resources().reduce((s, r) => s + held(r), 0));
   readonly pct = computed(() => (this.totalCap() ? Math.round((this.totalHeld() / this.totalCap()) * 100) : 0));
-  readonly activeCount = computed(() => this.holds().filter(h => h.status === 'ACTIVE').length);
+  readonly activeCount = computed(() => this.holds().filter(h => h.status === 'HELD').length);
   readonly top = computed(() => [...this.resources()].sort((a, b) => util(b) - util(a)).slice(0, 6));
   readonly recent = computed(() => this.holds().slice(0, 6));
   constructor() {

@@ -1,13 +1,187 @@
-@if (loading()) {<div class="loading"></div>}
-<div class="ph"><h1>Holds</h1><span class="sp"></span><a routerLink="/console/holds/new" class="btn pri"><span class="ms">add_task</span>Create hold</a></div>
-@if (error()) {<p class="err"><span class="ms">error</span>{{ error() }}</p>}
-<div class="tbl">
-  <div class="toolbar">@for (f of filters; track f.label) {<button class="fchip" [class.on]="status() === f.v" (click)="setFilter(f.v)">{{ f.label }}</button>}</div>
-  <table><thead><tr><th>Hold ID</th><th>Resource</th><th>Holder</th><th>Qty</th><th>Status</th><th>Created</th><th>Expires</th><th></th></tr></thead><tbody>
-    @for (h of holds(); track h.id) {
-      <tr><td class="mono">{{ h.id.slice(0, 8) }}</td><td><a [routerLink]="['/console/resources', h.resourceId]">{{ h.resourceKey }}</a></td><td>{{ h.holderName }}</td><td>{{ h.quantity }}</td>
-        <td><span [class]="chip(h)">{{ h.status }}</span></td><td>{{ h.createdAt | date: 'MMM d, h:mm a' }}</td><td>{{ h.expiresAt | date: 'MMM d, h:mm a' }}</td>
-        <td>@if (h.status === 'ACTIVE') {<button class="btn sm danger" (click)="release(h)">Release</button>}</td></tr>
-    }</tbody></table>
-  @if (!loading() && holds().length === 0) {<div class="empty"><span class="ms">bookmark</span>No holds match this filter.</div>}
+<div class="holds-page">
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="loading"></div>
+      <span>Loading holds...</span>
+    </div>
+  }
+
+  <header class="page-header">
+    <div class="header-content">
+      <div class="eyebrow">
+        <span class="ms">bookmark</span>
+        RESOURCE MANAGEMENT
+      </div>
+
+      <h1>Holds</h1>
+      <p class="page-description">
+        Track temporary reservations and manage allocated resource capacity.
+      </p>
+    </div>
+
+    <a routerLink="/console/holds/new" class="btn pri">
+      <span class="ms">add</span>
+      Create hold
+    </a>
+  </header>
+
+  @if (error()) {
+    <div class="error-banner" role="alert">
+      <span class="ms">error</span>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  <section class="holds-panel">
+
+    <div class="panel-header">
+      <div>
+        <h2>All holds</h2>
+        <p>Review and manage your temporary reservations.</p>
+      </div>
+
+      <div class="panel-meta">
+        <span class="ms">database</span>
+        <span>{{ holds().length }} records</span>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="filter-label">
+        <span class="ms">filter_list</span>
+        Filter by status
+      </div>
+
+      <div class="filter-list">
+        @for (f of filters; track f.label) {
+          <button
+            type="button"
+            class="fchip"
+            [class.on]="status() === f.v"
+            (click)="setFilter(f.v)">
+            {{ f.label }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Resource Key</th>
+            <!-- <th>Holder</th> -->
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Expires</th>
+            <th class="action-heading">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (h of holds(); track h.id) {
+            <tr>
+              <td>
+                <div class="hold-id">
+                  <span class="id-icon ms">bookmark</span>
+                  <span class="mono">{{ h.id.slice(0, 8) }}</span>
+                </div>
+              </td>
+
+              <td>
+                <a
+                  class="resource-link"
+                  [routerLink]="['/console/resources', h.resourceKey]">
+                  <span class="ms">inventory_2</span>
+                  {{ h.resourceKey }}
+                </a>
+              </td>
+
+              <!-- <td>
+                <div class="holder-cell">
+                  <span class="holder-avatar ms">person</span>
+                  <span>{{ h.holderName }}</span>
+                </div>
+              </td> -->
+
+              <td>
+                <span class="quantity">{{ h.quantity }}</span>
+                <span class="quantity-label">units</span>
+              </td>
+
+              <td>
+                <span [class]="chip(h)" class="status-chip">
+                  <span class="status-dot"></span>
+                  {{ h.status }}
+                </span>
+              </td>
+
+              <td>
+                <div class="date-cell">
+                  <span>{{ h.createdAt | date: 'MMM d, y' }}</span>
+                  <small>{{ h.createdAt | date: 'h:mm a' }}</small>
+                </div>
+              </td>
+
+              <td>
+                <div class="date-cell">
+                  <span>{{ h.expiresAt | date: 'MMM d, y' }}</span>
+                  <small>{{ h.expiresAt | date: 'h:mm a' }}</small>
+                </div>
+              </td>
+
+              <td class="action-cell">
+                @if (h.status === 'HELD') {
+                  <button
+                    type="button"
+                    class="release-btn"
+                    (click)="release(h)">
+                    <span class="ms">lock_open</span>
+                    Release
+                  </button>
+                } @else {
+                  <span class="no-action">—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (!loading() && holds().length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">
+          <span class="ms">bookmark_border</span>
+        </div>
+
+        <h3>No holds found</h3>
+
+        <p>
+          There are no holds matching this filter.
+          Try another status or create a new hold.
+        </p>
+
+        <a routerLink="/console/holds/new" class="btn pri">
+          <span class="ms">add</span>
+          Create your first hold
+        </a>
+      </div>
+    }
+
+    @if (loading() && holds().length === 0) {
+      <div class="table-loading">
+        <div class="loading"></div>
+        <span>Loading your holds...</span>
+      </div>
+    }
+
+    <footer class="panel-footer">
+      <span>Holdpoint resource management</span>
+      <span>All times are displayed in your local timezone</span>
+    </footer>
+
+  </section>
 </div>

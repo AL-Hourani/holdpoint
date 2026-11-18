@@ -6,9 +6,17 @@ import { CreateResourceRequest, Resource, UpdateResourceCapacityRequest } from '
 @Injectable({ providedIn: 'root' })
 export class ResourceService {
   private readonly http = inject(HttpClient);
+
+
   private readonly base = `${APP_CONFIG.apiBase}/resources`;
-  list() { return this.http.get<Resource[]>(this.base); } // needs GET /resources on the backend
-  create(b: CreateResourceRequest) { return this.http.post<Resource>(this.base, b); }
+  list() { 
+    return this.http.get<Resource[]>(this.base); 
+  } 
+
+  create(request: CreateResourceRequest) { 
+    return this.http.post<Resource>(this.base, request); 
+  
+  }
   getById(id: string) { return this.http.get<Resource>(`${this.base}/${id}`); }
   getByKey(key: string) { return this.http.get<Resource>(`${this.base}/key/${encodeURIComponent(key)}`); }
   updateCapacity(id: string, b: UpdateResourceCapacityRequest) { return this.http.patch<Resource>(`${this.base}/${id}/capacity`, b); }

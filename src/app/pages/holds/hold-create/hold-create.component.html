@@ -1,12 +1,195 @@
-<div class="ph"><div><div class="crumb"><a routerLink="/console/holds">Holds</a> › New</div><h1>Create a hold</h1></div></div>
-<form class="form card" [formGroup]="form" (ngSubmit)="submit()">
-  <div class="gf"><select id="r" formControlName="resourceId"><option value="" disabled>Select a resource</option>
-    @for (r of resources(); track r.id) {<option [value]="r.id">{{ r.name }} ({{ r.resourceKey }})</option>}</select><label for="r">Resource</label></div>
-  @if (selected(); as s) {<p class="hint">{{ avail() }} of {{ s.capacity }} units available.</p>}
-  <div class="gf"><input id="h" formControlName="holderName" placeholder=" " /><label for="h">Held for (team or person)</label></div>
-  <div class="gf"><input id="q" type="number" min="1" formControlName="quantity" placeholder=" " /><label for="q">Quantity</label></div>
-  @if (tooMany()) {<p class="err"><span class="ms">warning</span>Quantity exceeds the {{ avail() }} available units.</p>}
-  <div class="gf"><select id="d" formControlName="durationMinutes">@for (d of durations; track d.m) {<option [ngValue]="d.m">{{ d.l }}</option>}</select><label for="d">Hold duration</label></div>
-  @if (error()) {<p class="err" role="alert"><span class="ms">error</span>{{ error() }}</p>}
-  <div class="acts"><button class="btn pri" [disabled]="form.invalid || tooMany() || busy()">{{ busy() ? 'Creating…' : 'Create hold' }}</button><a routerLink="/console/holds" class="btn">Cancel</a></div>
-</form>
+
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-main">
+      <div class="breadcrumb">
+        <a routerLink="/console/holds">Holds</a>
+        <svg lucideChevronRight></svg>
+        <span>New hold</span>
+      </div>
+
+      <div class="title-row">
+        <div class="title-icon">
+          <svg lucideBookmarkPlus></svg>
+        </div>
+        <div>
+          <h1>Create a hold</h1>
+          <p>Temporarily reserve resource capacity for a person or team.</p>
+        </div>
+      </div>
+    </div>
+
+    <a routerLink="/console/holds" class="back-link">
+      <svg lucideArrowLeft></svg>
+      Back to holds
+    </a>
+  </div>
+
+  <div class="content-grid">
+    <form
+      class="hold-form card"
+      [formGroup]="form"
+      (ngSubmit)="submit()">
+
+      <div class="form-heading">
+        <div>
+          <h2>Hold details</h2>
+          <p>Enter the resource and reservation details.</p>
+        </div>
+        <span class="required-note">* Required fields</span>
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">
+          <span class="section-icon">
+            <svg lucidePackage></svg>
+          </span>
+          <div>
+            <h3>Resource selection</h3>
+            <p>Choose which resource to reserve.</p>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="r">Resource <span>*</span></label>
+
+          <div class="select-wrap">
+            <select id="r" formControlName="resourceId">
+              <option value="" disabled>Select a resource</option>
+              @for (r of resources(); track r.id) {
+                <option [value]="r.id">
+                  {{ r.name }} ({{ r.resourceKey }})
+                </option>
+              }
+            </select>
+            <svg lucideChevronDown></svg>
+          </div>
+        </div>
+
+        @if (selected(); as s) {
+          <div class="availability-card">
+            <div class="availability-icon">
+              <svg lucideBoxes></svg>
+            </div>
+
+            <div class="availability-info">
+              <span>Available capacity</span>
+              <strong>{{ avail() }} <small>of {{ s.capacity }} units</small></strong>
+            </div>
+
+            <span class="availability-status" [class.low]="avail() === 0">
+              <!-- {{ avail() > 0 ? 'Available' : 'Fully allocated' }} -->
+            </span>
+          </div>
+        }
+      </div>
+
+      <div class="form-divider"></div>
+
+      <div class="form-section">
+        <div class="section-label">
+          <span class="section-icon">
+            <svg lucideUsers></svg>
+          </span>
+          <div>
+            <h3>Reservation details</h3>
+            <p>Specify who the hold is being created for.</p>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="h">Held for <span>*</span></label>
+          <input
+            id="h"
+            type="text"
+            formControlName="holderName"
+            placeholder="Enter a team or person's name"
+            autocomplete="off" />
+          <span class="field-hint">For example, a team name or customer.</span>
+        </div>
+
+        <div class="field-group">
+          <label for="q">Quantity <span>*</span></label>
+          <div class="quantity-wrap">
+            <input
+              id="q"
+              type="number"
+              min="1"
+              formControlName="quantity"
+              placeholder="Enter quantity" />
+            <span>Units</span>
+          </div>
+
+          @if (selected()) {
+            <div class="quantity-hint">
+              <svg lucideInfo></svg>
+              <span>{{ avail() }} units currently available.</span>
+            </div>
+          }
+
+          @if (tooMany()) {
+            <p class="field-error">
+              <svg lucideAlertTriangle></svg>
+              Quantity exceeds the {{ avail() }} available units.
+            </p>
+          }
+        </div>
+      </div>
+
+      <div class="form-divider"></div>
+
+      <div class="form-section">
+        <div class="section-label">
+          <span class="section-icon">
+            <svg lucideClock3></svg>
+          </span>
+          <div>
+            <h3>Expiration settings</h3>
+            <p>Choose how long this temporary hold remains active.</p>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="d">Hold duration <span>*</span></label>
+
+          <div class="select-wrap">
+            <select id="d" formControlName="durationMinutes">
+              @for (d of durations; track d.m) {
+                <option [ngValue]="d.m">{{ d.l }}</option>
+              }
+            </select>
+            <svg lucideChevronDown></svg>
+          </div>
+
+          <span class="field-hint">
+            The hold will expire automatically after this duration.
+          </span>
+        </div>
+      </div>
+
+      @if (error()) {
+        <div class="error-banner" role="alert">
+          <svg lucideAlertCircle></svg>
+          <span>{{ error() }}</span>
+        </div>
+      }
+
+      <div class="form-actions">
+        <a routerLink="/console/holds" class="cancel-btn">Cancel</a>
+
+        <button
+          type="submit"
+          class="submit-btn"
+          [disabled]="form.invalid || tooMany() || busy()">
+          @if (busy()) {
+            <span class="button-spinner"></span>
+            Creating hold...
+          } @else {
+            <svg lucideBookmarkPlus></svg>
+            Create hold
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

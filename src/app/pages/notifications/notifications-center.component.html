@@ -1,0 +1,402 @@
+
+<div class="notifications-page">
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+
+    <div>
+      <div class="breadcrumb">
+        <span>Workspace</span>
+        <i>/</i>
+        <strong>Notifications</strong>
+      </div>
+
+      <div class="title-row">
+        <h1>Notifications</h1>
+
+        @if (unreadCount() > 0) {
+          <span class="unread-badge">
+            {{ unreadCount() }} new
+          </span>
+        }
+      </div>
+
+      <p>
+        Stay informed about activity and important updates
+        across your Holdpoint workspace.
+      </p>
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        class="secondary-btn"
+        type="button"
+        (click)="clearReadNotifications()"
+        [disabled]="readCount() === 0">
+
+        <svg lucideTrash2></svg>
+        Clear read
+
+      </button>
+
+      <button
+        class="primary-btn"
+        type="button"
+        (click)="markAllAsRead()"
+        [disabled]="unreadCount() === 0">
+
+        <svg lucideCheckCheck></svg>
+        Mark all as read
+
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- SUMMARY CARDS -->
+  <section class="stats-grid">
+
+    <article class="stat-card">
+      <div class="stat-icon total">
+        <svg lucideBell></svg>
+      </div>
+
+      <div>
+        <span>Total notifications</span>
+        <strong>{{ totalCount() }}</strong>
+        <small>All activity updates</small>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon unread">
+        <svg lucideMailOpen></svg>
+      </div>
+
+      <div>
+        <span>Unread notifications</span>
+        <strong>{{ unreadCount() }}</strong>
+        <small>Require your attention</small>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon read">
+        <svg lucideCheckCircle2></svg>
+      </div>
+
+      <div>
+        <span>Read notifications</span>
+        <strong>{{ readCount() }}</strong>
+        <small>Already reviewed</small>
+      </div>
+    </article>
+
+  </section>
+
+
+  <!-- NOTIFICATION CENTER -->
+  <section class="notification-panel">
+
+    <div class="panel-header">
+
+      <div>
+        <h2>Activity center</h2>
+        <p>Updates from your applications and workspace.</p>
+      </div>
+
+      <div class="panel-search">
+        <svg lucideSearch></svg>
+
+        <input
+          type="search"
+          placeholder="Search notifications..."
+          [value]="searchQuery()"
+          (input)="searchQuery.set($any($event.target).value)"
+        />
+
+        @if (searchQuery()) {
+          <button
+            type="button"
+            aria-label="Clear search"
+            (click)="clearSearch()">
+
+            <svg lucideX></svg>
+
+          </button>
+        }
+
+      </div>
+
+    </div>
+
+
+    <!-- FILTERS -->
+    <div class="filter-bar">
+
+      <div class="filter-tabs">
+
+        <button
+          [class.active]="activeFilter() === 'all'"
+          (click)="setFilter('all')">
+
+          All
+          <span>{{ totalCount() }}</span>
+
+        </button>
+
+        <button
+          [class.active]="activeFilter() === 'unread'"
+          (click)="setFilter('unread')">
+
+          Unread
+          <span>{{ unreadCount() }}</span>
+
+        </button>
+
+        <button
+          [class.active]="activeFilter() === 'read'"
+          (click)="setFilter('read')">
+
+          Read
+          <span>{{ readCount() }}</span>
+
+        </button>
+
+      </div>
+
+      <span class="results-count">
+        {{ filteredNotifications().length }} notifications
+      </span>
+
+    </div>
+
+
+    <!-- NOTIFICATION LIST -->
+    <div class="notification-list">
+
+      @for (notification of filteredNotifications(); track notification.id) {
+
+        <article
+          class="notification-item"
+          [class.unread]="!notification.read">
+
+          <div class="notification-icon"
+            [class.reservation]="notification.type === 'reservation'"
+            [class.resource]="notification.type === 'resource'"
+            [class.security]="notification.type === 'security'"
+            [class.system]="notification.type === 'system'">
+
+            @switch (notification.type) {
+
+              @case ('reservation') {
+                <svg lucideCalendarCheck></svg>
+              }
+
+              @case ('resource') {
+                <svg lucidePackage></svg>
+              }
+
+              @case ('security') {
+                <svg lucideShieldCheck></svg>
+              }
+
+              @case ('system') {
+                <svg lucideInfo></svg>
+              }
+
+            }
+
+          </div>
+
+
+          <div class="notification-content">
+
+            <div class="notification-title-row">
+
+              <h3>{{ notification.title }}</h3>
+
+              @if (!notification.read) {
+                <span class="new-indicator"></span>
+              }
+
+            </div>
+
+            <p>{{ notification.message }}</p>
+
+            <div class="notification-meta">
+
+              <span>
+                <svg lucideLayers></svg>
+                {{ notification.application }}
+              </span>
+
+              <span class="meta-dot"></span>
+
+              <span>
+                <svg lucideClock></svg>
+                {{ notification.time }}
+              </span>
+
+              <span class="type-label"
+                [class]="notification.type">
+
+                {{ getTypeLabel(notification.type) }}
+
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- ACTIONS -->
+          <div class="notification-actions">
+
+            @if (!notification.read) {
+
+              <button
+                class="action-button"
+                title="Mark as read"
+                aria-label="Mark as read"
+                (click)="markAsRead(notification.id)">
+
+                <svg lucideCheck></svg>
+
+              </button>
+
+            } @else {
+
+              <button
+                class="action-button"
+                title="Mark as unread"
+                aria-label="Mark as unread"
+                (click)="markAsUnread(notification.id)">
+
+                <svg lucideMail></svg>
+
+              </button>
+
+            }
+
+            <button
+              class="action-button delete"
+              title="Delete notification"
+              aria-label="Delete notification"
+              (click)="deleteNotification(notification.id)">
+
+              <svg lucideTrash2></svg>
+
+            </button>
+
+          </div>
+
+        </article>
+
+      } @empty {
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            <svg lucideBellOff></svg>
+          </div>
+
+          @if (searchQuery()) {
+
+            <h3>No matching notifications</h3>
+
+            <p>
+              We couldn't find any notifications matching
+              "{{ searchQuery() }}".
+            </p>
+
+            <button (click)="clearSearch()">
+              Clear search
+            </button>
+
+          } @else if (activeFilter() === 'unread') {
+
+            <h3>You're all caught up!</h3>
+
+            <p>
+              You have no unread notifications at the moment.
+            </p>
+
+            <button (click)="setFilter('all')">
+              View all notifications
+            </button>
+
+          } @else {
+
+            <h3>No notifications yet</h3>
+
+            <p>
+              Important updates from Holdpoint will appear here.
+            </p>
+
+          }
+
+        </div>
+
+      }
+
+    </div>
+
+
+    <!-- PANEL FOOTER -->
+    <footer class="panel-footer">
+
+      <span>
+        Showing {{ filteredNotifications().length }}
+        of {{ totalCount() }} notifications
+      </span>
+
+      <span class="footer-status">
+        <span></span>
+        Notification center
+      </span>
+
+    </footer>
+
+  </section>
+
+
+  <!-- INFORMATION -->
+  <section class="notification-info">
+
+    <div class="info-icon">
+      <svg lucideShieldCheck></svg>
+    </div>
+
+    <div>
+      <strong>Stay informed. Stay in control.</strong>
+      <p>
+        Notifications help you keep track of important events
+        across your Holdpoint applications.
+      </p>
+    </div>
+
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+
+    <div class="footer-brand">
+      <span class="brand-mark">
+        <i></i><i></i><i></i><i></i>
+      </span>
+
+      <strong>Holdpoint</strong>
+
+      <span>Notification Center</span>
+    </div>
+
+    <span>© 2026 Holdpoint. All rights reserved.</span>
+
+  </footer>
+
+</div>

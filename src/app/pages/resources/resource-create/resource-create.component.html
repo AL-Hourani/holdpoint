@@ -1,10 +1,174 @@
-<div class="ph"><div><div class="crumb"><a routerLink="/console/resources">Resources</a> › New</div><h1>Create a resource</h1></div></div>
-<form class="form card" [formGroup]="form" (ngSubmit)="submit()">
-  <div class="gf"><input id="k" formControlName="resourceKey" placeholder=" " /><label for="k">Resource key</label></div>
-  <p class="hint">Lowercase letters, numbers and hyphens. Must be unique, e.g. conference-room-a.</p>
-  <div class="gf"><input id="n" formControlName="name" placeholder=" " /><label for="n">Name</label></div>
-  <div class="gf"><input id="c" type="number" min="1" formControlName="capacity" placeholder=" " /><label for="c">Capacity</label></div>
-  <p class="hint">The maximum units that can be held at the same time.</p>
-  @if (error()) {<p class="err" role="alert"><span class="ms">error</span>{{ error() }}</p>}
-  <div class="acts"><button class="btn pri" [disabled]="form.invalid || busy()">{{ busy() ? 'Creating…' : 'Create' }}</button><a routerLink="/console/resources" class="btn">Cancel</a></div>
-</form>
+<div class="resource-create-page">
+
+  <div class="page-header">
+    <div class="header-main">
+      <div class="breadcrumb">
+        <a routerLink="/console/resources">Resources</a>
+        <span class="ms">
+          <svg LucideChevronRight></svg>
+        </span>
+        <span>New resource</span>
+      </div>
+
+      <div class="eyebrow">
+        <span class="ms">
+         <svg LucidePackagePlus ></svg>
+        </span>
+        RESOURCE MANAGEMENT
+      </div>
+
+      <h1>Create a resource</h1>
+
+      <p class="page-description">
+        Add a resource to your workspace and define its available capacity.
+      </p>
+    </div>
+
+    <a routerLink="/console/resources" class="back-link">
+      <span class="ms">arrow_back</span>
+      Back to resources
+    </a>
+  </div>
+
+  <div class="resource-layout">
+
+    <main class="form-column">
+
+      <form
+        class="resource-form"
+        [formGroup]="form"
+        (ngSubmit)="submit()">
+
+        <div class="form-section">
+          <div class="section-heading">
+            <div class="section-icon">
+              <span class="ms">inventory_2</span>
+            </div>
+
+            <div>
+              <h2>Resource information</h2>
+              <p>Identify the resource you want to manage.</p>
+            </div>
+          </div>
+
+          <div class="form-fields">
+
+            <div class="field-group">
+              <label for="k">Resource key</label>
+
+              <div class="input-wrap">
+                <span class="input-icon ms">key</span>
+
+                <input
+                  id="k"
+                  type="text"
+                  formControlName="resourceKey"
+                  placeholder="e.g. conference-room-a"
+                  autocomplete="off" />
+              </div>
+
+              <div class="field-hint">
+                <span class="ms">info</span>
+                <span>
+                  Use lowercase letters, numbers and hyphens.
+                  This key must be unique.
+                </span>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="n">Resource name</label>
+
+              <div class="input-wrap">
+                <span class="input-icon ms">label</span>
+
+                <input
+                  id="n"
+                  type="text"
+                  formControlName="name"
+                  placeholder="e.g. Conference Room A" />
+              </div>
+
+              <span class="field-description">
+                A clear name that helps identify this resource.
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+
+        <div class="form-section">
+          <div class="section-heading">
+            <div class="section-icon capacity-icon">
+              <span class="ms">stacked_bar_chart</span>
+            </div>
+
+            <div>
+              <h2>Capacity settings</h2>
+              <p>Define how many units this resource can support.</p>
+            </div>
+          </div>
+
+          <div class="field-group capacity-field">
+            <label for="c">Total capacity</label>
+
+            <div class="input-wrap">
+              <span class="input-icon ms">numbers</span>
+
+              <input
+                id="c"
+                type="number"
+                min="1"
+                formControlName="capacity"
+                placeholder="e.g. 100" />
+
+              <span class="input-suffix">Units</span>
+            </div>
+
+            <div class="field-hint">
+              <span class="ms">info</span>
+              <span>
+                Maximum number of units that can be held or confirmed
+                at the same time.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        @if (error()) {
+          <div class="error-banner" role="alert">
+            <span class="ms">error</span>
+            <span>{{ error() }}</span>
+          </div>
+        }
+
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="btn pri submit-btn"
+            [disabled]="form.invalid || busy()">
+
+            @if (busy()) {
+              <span class="loading-spinner"></span>
+              Creating resource...
+            } @else {
+              <span class="ms">add</span>
+              Create resource
+            }
+          </button>
+
+          <a
+            routerLink="/console/resources"
+            class="btn cancel-btn">
+            Cancel
+          </a>
+        </div>
+
+      </form>
+
+    </main>
+
+  </div>
+</div>

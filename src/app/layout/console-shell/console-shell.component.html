@@ -1,28 +1,183 @@
+
+<div class="console-shell">
+ 
 <header class="topbar">
-  <button class="icon-btn" (click)="open.set(!open())" aria-label="Main menu"><span class="ms">menu</span></button>
-  <a routerLink="/console" class="brand"><span class="mark"><i></i><i></i><i></i><i></i></span>Holdora <small>Console</small></a>
-  <form class="search" (submit)="search($event, q.value)" role="search">
-    <span class="ms">search</span><input #q placeholder="Search resources by key or name" aria-label="Search resources" />
-  </form>
-  <span class="sp"></span>
-  <a routerLink="/console/resources/new" class="btn pri"><span class="ms">add</span>Create resource</a>
-  <div class="pw">
-    <button class="avatar" (click)="menu.set(!menu())" aria-label="Account">{{ initial() }}</button>
-    @if (menu()) {
-      <div class="pop"><div><b>{{ auth.name() || 'Account' }}</b><div class="muted">{{ auth.email() }}</div></div>
-        <button class="btn" (click)="auth.logout()"><span class="ms">logout</span>Sign out</button></div>
-    }
+
+  <!-- LEFT: BRAND & APPLICATION -->
+  <div class="topbar-left">
+
+    <button
+      class="icon-btn menu-toggle"
+      type="button"
+      (click)="open.set(!open())"
+      aria-label="Toggle navigation"
+      [attr.aria-expanded]="open()">
+      <svg lucidePanelLeft></svg>
+    </button>
+
+    <a routerLink="/console" class="brand">
+      <span class="brand-mark">
+        <i></i><i></i><i></i><i></i>
+      </span>
+
+      <span class="brand-name">Holdpoint</span>
+      <span class="brand-divider"></span>
+      <span class="brand-section">Workspace</span>
+    </a>
+
   </div>
-</header>
-<div class="body">
-  <nav class="side" [class.collapsed]="!open()" aria-label="Main">
-    @for (g of nav; track g.h) {
-      <h4>{{ g.h }}</h4>
-      @for (i of g.items; track i.link) {
-        <a [routerLink]="i.link" routerLinkActive="on" [routerLinkActiveOptions]="{ exact: i.exact }" [title]="i.label"><span class="ms">{{ i.icon }}</span><span class="lbl">{{ i.label }}</span></a>
+
+
+  <!-- CENTER: SEARCH -->
+  <!-- <form
+    class="search"
+    (submit)="search($event, q.value)"
+    role="search">
+
+    <svg lucideSearch></svg>
+
+    <input
+      #q
+      placeholder="Search resources by key or name..."
+      aria-label="Search resources" />
+
+    <kbd>Enter</kbd>
+  </form> -->
+
+
+  <!-- RIGHT: ACTIONS -->
+  <div class="topbar-actions">
+
+
+    <span class="topbar-divider"></span>
+
+
+    <!-- HELP -->
+    <span
+      class="icon-btn utility-btn"
+      routerLink="/console/support"
+      aria-label="Contact support"
+      title="Contact support">
+      <svg lucideCircleHelp></svg>
+    </span>
+
+    <!-- HELP -->
+    <a
+      class="icon-btn utility-btn"
+       routerLink="/console/notifications"
+      aria-label="Contact support"
+      title="Contact support">
+      <svg lucideBell></svg>
+    </a>
+
+
+    <!-- ACCOUNT -->
+    <div class="account-wrapper">
+
+      <button
+        class="avatar"
+        type="button"
+        (click)="menu.set(!menu())"
+        aria-label="Account menu"
+        [attr.aria-expanded]="menu()">
+
+        <!-- {{ initial() }} -->
+
+      </button>
+
+      @if (menu()) {
+        <div class="account-menu">
+
+          <div class="account-info">
+
+            <div class="account-avatar">
+              <!-- {{ initial() }} -->
+            </div>
+
+            <div class="account-details">
+              <strong>
+                {{ auth.currentUser()?.fullName }}
+              </strong>
+
+              <span>
+                {{ auth.currentUser()?.email }}
+              </span>
+
+              <small>Holdpoint account</small>
+            </div>
+
+          </div>
+
+          <div class="account-menu-divider"></div>
+
+          <button
+            class="signout-btn"
+            type="button"
+            (click)="auth.logout()">
+
+            <svg lucideLogOut></svg>
+            Sign out
+
+          </button>
+
+        </div>
       }
-    }
-  </nav>
-  <main class="main"><router-outlet /></main>
+
+    </div>
+
+  </div>
+
+</header>
+
+
+
+
+
+  <div class="console-body">
+    <aside class="sidebar" [class.collapsed]="!open()" aria-label="Main navigation">
+      <div class="sidebar-content">
+        @for (g of nav; track g.h) {
+          <section class="nav-group">
+            <h4>{{ g.h }}</h4>
+
+            <div class="nav-items">
+              @for (i of g.items; track i.link) {
+                <a
+                  class="nav-link"
+                  [routerLink]="i.link"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: i.exact }"
+                  [title]="!open() ? i.label : ''">
+
+                  <svg [lucideIcon]=i.icon></svg>
+                  <span class="nav-label">{{ i.label }}</span>
+                </a>
+              }
+            </div>
+          </section>
+        }
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-status">
+          <span class="status-dot"></span>
+          <span class="sidebar-label">System operational</span>
+        </div>
+        <span class="version-label">Holdpoint · v1.0</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="content-inner">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
+
+  @if (toast.msg(); as t) {
+    <div class="snack" role="status">
+      <svg lucideCheckCircle2></svg>
+      <span>{{ t }}</span>
+    </div>
+  }
 </div>
-@if (toast.msg(); as t) {<div class="snack" role="status">{{ t }}</div>}
