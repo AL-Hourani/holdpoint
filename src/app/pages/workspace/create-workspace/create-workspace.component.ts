@@ -2,11 +2,13 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { WorkspaceService } from '../services/workspace.service';
 import { Router, RouterLink } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-create-workspace',
   standalone: true,
   imports : [
+    ReactiveFormsModule,
     RouterLink
   ],
   templateUrl: './create-workspace.component.html',
@@ -18,10 +20,7 @@ export class CreateWorkspaceComponent {
   private readonly workspaceService = inject(WorkspaceService);
   private readonly router = inject(Router);
 
-  readonly name = signal('');
-  readonly slug = signal('');
 
-  readonly slugEdited = signal(false);
   readonly loading = signal(false);
   readonly errorMessage = signal('');
 
@@ -30,44 +29,21 @@ export class CreateWorkspaceComponent {
 
   readonly slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-  readonly isNameValid = computed(() => {
-    const value = this.name().trim();
-    return value.length >= 2 && value.length <= 150;
-  });
+  
+  readonly form = inject(FormBuilder).nonNullable.group(
+    {
+      name : ['' , Validators.required , Validators.maxLength(150)],
+      slug : ['' , Validators.required , Validators.maxLength(150)],
+    }
+  )
 
-  readonly isSlugValid = computed(() => {
-    const value = this.slug();
-    return value.length >= 3 &&
-      value.length <= 150 &&
-      this.slugPattern.test(value);
-  });
-
-  readonly canSubmit = computed(() =>
-    this.isNameValid() &&
-    this.isSlugValid() &&
-    !this.loading()
-  );
 
   readonly previewUrl = computed(() =>
-    `holdpoint.com/${this.slug() || 'your-workspace'}`
+    `holdpoint.com/${this.form.getRawValue().slug || 'your-workspace'}`
   );
 
-  onNameChange(value: string): void {
-    this.name.set(value);
-    this.nameTouched.set(true);
-    this.errorMessage.set('');
 
-    if (!this.slugEdited()) {
-      this.slug.set(this.generateSlug(value));
-    }
-  }
 
-  onSlugChange(value: string): void {
-    this.slugEdited.set(true);
-    this.slugTouched.set(true);
-    this.slug.set(this.generateSlug(value));
-    this.errorMessage.set('');
-  }
 
   private generateSlug(value: string): string {
     return value
@@ -80,31 +56,22 @@ export class CreateWorkspaceComponent {
       .slice(0, 150);
   }
 
-  resetSlug(): void {
-    this.slugEdited.set(false);
-    this.slug.set(this.generateSlug(this.name()));
-  }
+
 
   createWorkspace(): void {
     this.nameTouched.set(true);
     this.slugTouched.set(true);
 
-    if (!this.canSubmit()) {
-      return;
-    }
-
     this.loading.set(true);
     this.errorMessage.set('');
 
-    this.workspaceService.create({
-      name: this.name().trim(),
-      slug: this.slug()
-    }).subscribe({
+    this.workspaceService.create(this.form.getRawValue()
+    ).subscribe({
       next: (workspace) => {
         this.loading.set(false);
 
         this.router.navigate([
-          '/workspaces',
+          '/console',
           workspace.slug
         ]);
       },

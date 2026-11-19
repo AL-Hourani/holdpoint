@@ -17,6 +17,12 @@ export const routes: Routes = [
       import('./pages/workspace/create-workspace/create-workspace.component')
         .then(m => m.CreateWorkspaceComponent)
   },
+  {
+    path: 'workspaces',
+    loadComponent: () =>
+      import('./pages/workspace/list-workspaces/workspaces.component')
+        .then(m => m.WorkspacesComponent)
+  },
   { path: 'pricing', title: 'Alhourani . pricing', loadComponent: () => import('./pages/pricing/pricing.component').then(m => m.PricingComponent) },
   {
     path : "settings" , loadComponent : () => import('./pages/settings/security/security').then(m => m.SecurityComponent),

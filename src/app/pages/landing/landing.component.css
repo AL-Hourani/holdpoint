@@ -52,12 +52,17 @@
   background: #16a36a;
   box-shadow: 0 0 0 4px rgba(22, 163, 106, .1);
 }
-
 .welcome {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 5px;
+  color: #5f6368;
+  font-size: 13px;
+}
+
+.welcome strong {
+  color: #202124;
+  font-weight: 600;
 }
 /* Navigation */
 

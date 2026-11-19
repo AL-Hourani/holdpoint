@@ -8,6 +8,7 @@ import {
   WorkspaceResponse
 } from '../models/workspace.model';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,5 +26,10 @@ export class WorkspaceService {
       this.apiUrl,
       request
     );
+
+  }
+
+    getMyWorkspaces(): Observable<WorkspaceResponse[]> {
+    return this.http.get<WorkspaceResponse[]>(this.apiUrl);
   }
 }

@@ -21,6 +21,7 @@ export class AuthService {
   private readonly router = inject(Router);
 
   private readonly userState = signal<MeResponse | null>(null);
+
   readonly currentUser = this.userState.asReadonly();
 
 
@@ -93,6 +94,7 @@ export class AuthService {
 
 
     initialize() {
+    this.initializedState.set(false);
     return this.refreshAccessToken().pipe(
 
       switchMap(() => this.loadCurrentUser()),

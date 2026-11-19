@@ -16,19 +16,35 @@
       <a routerLink="/pricing">Pricing</a>
     </nav>
 
-    @if(auth.isAuthenticated()){
-      <div class = "welcome">
-        <span>Welcome</span>
-        <span>{{auth.currentUser()?.fullName}}</span>
-      </div>
-    }@else {
-    <div class="nav-actions">
-          <a routerLink="/login" class="login-link">Sign in</a>
-          <a routerLink="/register" class="nav-cta">
-            Get started <svg lucideArrowUpRight></svg>
+
+    @if (auth.initialized()) {
+
+      @if (auth.isAuthenticated()) {
+
+        <div class="welcome">
+          <span>Welcome back,</span>
+          <strong>{{ auth.currentUser()?.fullName }}</strong>
+        </div>
+
+      } @else {
+
+        <div class="nav-actions">
+
+          <a routerLink="/login" class="login-link">
+            Sign in
           </a>
-    </div>
+
+          <a routerLink="/register" class="nav-cta">
+            Get started
+            <svg lucideArrowUpRight></svg>
+          </a>
+
+        </div>
+
+      }
+
     }
+
    
   </div>
 </header>

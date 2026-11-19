@@ -95,7 +95,7 @@
 
         </div>
 
-        <form class="workspace-form" (ngSubmit)="createWorkspace()">
+        <form class="workspace-form" [formGroup]="form" (ngSubmit)="createWorkspace()">
 
           <div class="field">
 
@@ -112,22 +112,12 @@
                 placeholder="e.g. Acme Technologies"
                 maxlength="150"
                 autocomplete="organization"
-                [value]="name()"
-                (input)="onNameChange($any($event.target).value)"
-                [class.invalid]="nameTouched() && !isNameValid()"
+                formControlName="name"
+                
               />
 
             </div>
 
-            @if (nameTouched() && !isNameValid()) {
-              <span class="field-error">
-                Enter a name between 2 and 150 characters.
-              </span>
-            } @else {
-              <span class="field-hint">
-                This is the name your team will see.
-              </span>
-            }
 
           </div>
 
@@ -146,15 +136,12 @@
                 id="workspaceSlug"
                 type="text"
                 placeholder="your-workspace"
-                maxlength="150"
-                [value]="slug()"
-                (input)="onSlugChange($any($event.target).value)"
-                [class.invalid]="slugTouched() && !isSlugValid()"
+                formControlName="slug"   
               />
 
             </div>
 
-            @if (slugTouched() && !isSlugValid()) {
+            <!-- @if (slugTouched() && !isSlugValid()) {
               <span class="field-error">
                 Use at least 3 lowercase letters or numbers,
                 separated by hyphens.
@@ -163,16 +150,9 @@
               <span class="field-hint">
                 A unique address for your workspace.
               </span>
-            }
+            } -->
 
-            @if (slugEdited()) {
-              <button
-                type="button"
-                class="reset-slug"
-                (click)="resetSlug()">
-                Reset from workspace name
-              </button>
-            }
+ /
 
           </div>
 
@@ -196,7 +176,7 @@
           <button
             type="submit"
             class="submit-btn"
-            [disabled]="!canSubmit()">
+          >
 
             <span>
               {{ loading() ? 'Creating workspace...' : 'Create workspace' }}
