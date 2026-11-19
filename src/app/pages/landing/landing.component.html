@@ -2,7 +2,10 @@
 <header class="topbar">
   <div class="nav-container">
     <a routerLink="/" class="brand">
-      <span class="brand-mark"><i></i><i></i><i></i><i></i></span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="220 -25 240 240" xmlns:c2pa="http://c2pa.org/manifest">
+        <polygon points="320,30 360,30 420,160 380,160 340,75 300,160 260,160" fill="#111111"/>
+        <circle cx="340" cy="136" r="14" fill="#111111"/>
+      </svg>
       <span>Alhourani</span>
     </a>
 
@@ -13,12 +16,20 @@
       <a routerLink="/pricing">Pricing</a>
     </nav>
 
+    @if(auth.isAuthenticated()){
+      <div class = "welcome">
+        <span>Welcome</span>
+        <span>{{auth.currentUser()?.fullName}}</span>
+      </div>
+    }@else {
     <div class="nav-actions">
-      <a routerLink="/login" class="login-link">Sign in</a>
-      <a routerLink="/register" class="nav-cta">
-        Get started <svg lucideArrowUpRight></svg>
-      </a>
+          <a routerLink="/login" class="login-link">Sign in</a>
+          <a routerLink="/register" class="nav-cta">
+            Get started <svg lucideArrowUpRight></svg>
+          </a>
     </div>
+    }
+   
   </div>
 </header>
 
@@ -74,7 +85,12 @@
         <div class="ecosystem-window">
           <div class="dashboard-topbar">
             <div class="dashboard-brand">
-              <span class="mini-mark">H</span>
+              <span class="">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="220 -25 240 240" xmlns:c2pa="http://c2pa.org/manifest">
+                  <polygon points="320,30 360,30 420,160 380,160 340,75 300,160 260,160" fill="#111111"/>
+                  <circle cx="340" cy="136" r="14" fill="#111111"/>
+                </svg>
+              </span>
               <span>Alhourani</span>
               <span class="dashboard-separator">/</span>
               <span class="dashboard-muted">Applications</span>
@@ -506,9 +522,10 @@
   <div class="section-container footer-inner">
 
     <a routerLink="/" class="brand footer-brand">
-      <span class="brand-mark">
-        <i></i><i></i><i></i><i></i>
-      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="220 -25 240 240" xmlns:c2pa="http://c2pa.org/manifest">
+        <polygon points="320,30 360,30 420,160 380,160 340,75 300,160 260,160" fill="#111111"/>
+        <circle cx="340" cy="136" r="14" fill="#111111"/>
+      </svg>
       <span>Alhourani</span>
     </a>
 

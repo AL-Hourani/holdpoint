@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 // import { authGuard, guestGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
-  { path: '', title: 'Holdpoint — Resource reservations', loadComponent: () => import('./pages/landing/landing.component').then(m => m.LandingComponent) },
+  { path: '', title: 'Alhourani — Ecosystem of specialized business applications', loadComponent: () => import('./pages/landing/landing.component').then(m => m.LandingComponent) },
   { path: 'login', title: 'Sign in · Holdpoint', loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent) },
   
   { path: 'register', title: 'Create account · Holdpoint', loadComponent: () => import('./pages/auth/register/register.component').then(m => m.RegisterComponent) },
@@ -10,6 +10,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/auth/verify-email/verify-email')
         .then(m => m.VerifyEmailComponent),
+  },
+  {
+    path: 'workspaces/create',
+    loadComponent: () =>
+      import('./pages/workspace/create-workspace/create-workspace.component')
+        .then(m => m.CreateWorkspaceComponent)
   },
   { path: 'pricing', title: 'Alhourani . pricing', loadComponent: () => import('./pages/pricing/pricing.component').then(m => m.PricingComponent) },
   {

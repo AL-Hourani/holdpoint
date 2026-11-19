@@ -65,7 +65,8 @@
               "buildTarget": "holdpoint:build:production"
             },
             "development": {
-              "buildTarget": "holdpoint:build:development"
+              "buildTarget": "holdpoint:build:development",
+               "proxyConfig": "src/proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import {
@@ -14,27 +14,27 @@ import {
   LucideClock3,
   LucideBadgeCheck
 } from '@lucide/angular';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({ 
   selector: 'app-landing', 
   imports: [RouterLink,
   LucideArrowUpRight,
   LucideArrowRight,
-  LucideLayoutDashboard,
-  LucideBookmarkCheck,
+
   LucideShieldCheck,
   LucideCheck,
-  LucideGauge,
   LucideLayers,
-  LucideDatabase,
-  LucideClock3,
-  LucideBadgeCheck
+
   ], 
   templateUrl: './landing.component.html' ,
   styleUrl : './landing.component.css'
 
 })
 export class LandingComponent {
+
+  readonly auth = inject(AuthService);
+
   readonly preview = [{ n: 'Conference Room A', c: 12, h: 12 }, { n: 'GPU Cluster 01', c: 8, h: 6 }, { n: 'Pro License Pool', c: 50, h: 35 }, { n: 'Loading Dock 3', c: 4, h: 2 }];
   readonly feats = [
     { i: 'verified', t: 'Capacity you can trust', d: 'Every hold is validated against remaining capacity, so a resource can never be overbooked.' },

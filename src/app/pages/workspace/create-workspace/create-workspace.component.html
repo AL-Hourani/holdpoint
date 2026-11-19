@@ -1,0 +1,237 @@
+
+<div class="workspace-page">
+
+  <div class="workspace-shell">
+
+    <!-- Brand / Introduction -->
+    <aside class="workspace-aside">
+
+      <a routerLink="/dashboard" class="brand">
+        <span class="brand-mark">
+          <i></i><i></i><i></i><i></i>
+        </span>
+        <span>Holdpoint</span>
+      </a>
+
+      <div class="aside-content">
+
+        <span class="eyebrow">
+          <span class="status-dot"></span>
+          WORKSPACE MANAGEMENT
+        </span>
+
+        <h2>
+          One space.
+          <span>Everything organized.</span>
+        </h2>
+
+        <p>
+          Create a dedicated workspace for your organization.
+          Bring your resources, operations, and applications
+          together in one structured environment.
+        </p>
+
+        <div class="feature-list">
+
+          <div class="feature">
+            <span class="feature-number">01</span>
+            <div>
+              <strong>Centralized workspace</strong>
+              <small>Keep your organization's operations in one place.</small>
+            </div>
+          </div>
+
+          <div class="feature">
+            <span class="feature-number">02</span>
+            <div>
+              <strong>Organized resources</strong>
+              <small>Manage resources and reservations independently.</small>
+            </div>
+          </div>
+
+          <div class="feature">
+            <span class="feature-number">03</span>
+            <div>
+              <strong>Built to grow</strong>
+              <small>Expand your workspace as your organization evolves.</small>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="aside-footer">
+        <span>© 2026 Holdpoint</span>
+        <span>Infrastructure for modern businesses.</span>
+      </div>
+
+    </aside>
+
+    <!-- Workspace Creation -->
+    <main class="workspace-main">
+
+      <div class="mobile-brand">
+        <a routerLink="/dashboard" class="brand">
+          <span class="brand-mark">
+            <i></i><i></i><i></i><i></i>
+          </span>
+          <span>Holdpoint</span>
+        </a>
+      </div>
+
+      <div class="form-container">
+
+        <div class="form-heading">
+
+          <span class="form-label">GET STARTED</span>
+
+          <h1>Create your workspace</h1>
+
+          <p>
+            Set up a workspace for your organization
+            and start managing everything in one place.
+          </p>
+
+        </div>
+
+        <form class="workspace-form" (ngSubmit)="createWorkspace()">
+
+          <div class="field">
+
+            <label for="workspaceName">
+              Workspace name
+              <span class="required">*</span>
+            </label>
+
+            <div class="input-wrap">
+
+              <input
+                id="workspaceName"
+                type="text"
+                placeholder="e.g. Acme Technologies"
+                maxlength="150"
+                autocomplete="organization"
+                [value]="name()"
+                (input)="onNameChange($any($event.target).value)"
+                [class.invalid]="nameTouched() && !isNameValid()"
+              />
+
+            </div>
+
+            @if (nameTouched() && !isNameValid()) {
+              <span class="field-error">
+                Enter a name between 2 and 150 characters.
+              </span>
+            } @else {
+              <span class="field-hint">
+                This is the name your team will see.
+              </span>
+            }
+
+          </div>
+
+          <div class="field">
+
+            <label for="workspaceSlug">
+              Workspace URL
+              <span class="required">*</span>
+            </label>
+
+            <div class="input-wrap slug-wrap">
+
+              <span class="slug-prefix">holdpoint.com/</span>
+
+              <input
+                id="workspaceSlug"
+                type="text"
+                placeholder="your-workspace"
+                maxlength="150"
+                [value]="slug()"
+                (input)="onSlugChange($any($event.target).value)"
+                [class.invalid]="slugTouched() && !isSlugValid()"
+              />
+
+            </div>
+
+            @if (slugTouched() && !isSlugValid()) {
+              <span class="field-error">
+                Use at least 3 lowercase letters or numbers,
+                separated by hyphens.
+              </span>
+            } @else {
+              <span class="field-hint">
+                A unique address for your workspace.
+              </span>
+            }
+
+            @if (slugEdited()) {
+              <button
+                type="button"
+                class="reset-slug"
+                (click)="resetSlug()">
+                Reset from workspace name
+              </button>
+            }
+
+          </div>
+
+          <div class="workspace-preview">
+
+            <span class="preview-label">WORKSPACE ADDRESS</span>
+
+            <span class="preview-url">
+              {{ previewUrl() }}
+            </span>
+
+          </div>
+
+          @if (errorMessage()) {
+            <div class="error-message" role="alert">
+              <span class="error-icon">!</span>
+              <span>{{ errorMessage() }}</span>
+            </div>
+          }
+
+          <button
+            type="submit"
+            class="submit-btn"
+            [disabled]="!canSubmit()">
+
+            <span>
+              {{ loading() ? 'Creating workspace...' : 'Create workspace' }}
+            </span>
+
+            @if (!loading()) {
+              <span class="arrow">→</span>
+            }
+
+            @if (loading()) {
+              <span class="spinner"></span>
+            }
+
+          </button>
+
+          <div class="form-divider">
+            <span>ABOUT YOUR WORKSPACE</span>
+          </div>
+
+          <p class="workspace-note">
+            Your workspace will be associated with your account.
+            You can organize your resources and operations after creation.
+          </p>
+
+        </form>
+
+      </div>
+
+      <div class="main-footer">
+        <span>Secure workspace creation</span>
+        <span>Holdpoint Platform</span>
+      </div>
+
+    </main>
+
+  </div>
+
+</div>

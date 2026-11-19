@@ -52,9 +52,17 @@ import {
   styleUrl :'./overview.component.css'
 })
 export class OverviewComponent {
-  readonly util = util; readonly barClass = barClass; readonly chip = holdChip;
-  readonly loading = signal(true); readonly error = signal('');
-  readonly resources = signal<Resource[]>([]); readonly holds = signal<Hold[]>([]);
+  readonly util = util;
+  
+  readonly barClass = barClass; 
+  readonly chip = holdChip;
+
+  readonly loading = signal(true); 
+
+  readonly error = signal('');
+  readonly resources = signal<Resource[]>([]); 
+  
+  readonly holds = signal<Hold[]>([]);
   readonly totalCap = computed(() => this.resources().reduce((s, r) => s + r.capacity, 0));
   readonly totalHeld = computed(() => this.resources().reduce((s, r) => s + held(r), 0));
   readonly pct = computed(() => (this.totalCap() ? Math.round((this.totalHeld() / this.totalCap()) * 100) : 0));

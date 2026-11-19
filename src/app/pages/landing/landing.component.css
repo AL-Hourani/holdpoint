@@ -15,12 +15,6 @@
   text-decoration: none;
 }
 
-:host svg {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 auto;
-}
-
 /* Shared */
 
 .section-container,
@@ -59,6 +53,12 @@
   box-shadow: 0 0 0 4px rgba(22, 163, 106, .1);
 }
 
+.welcome {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
 /* Navigation */
 
 .topbar {
