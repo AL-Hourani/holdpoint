@@ -1,324 +1,131 @@
+<div class="page">
 
-<header class="topbar">
-  <div class="nav-container">
-    <a routerLink="/" class="brand">
-      <span class="brand-mark">
-        <i></i><i></i><i></i><i></i>
-      </span>
-      <span>Holdpoint</span>
+  <header class="topbar">
+    <a routerLink="/" class="brand" aria-label="Alhourani home">
+      <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M13 53 32 11l19 42" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="32" cy="42" r="5.5" fill="currentColor"/>
+      </svg>
+      <span>ALHOURANI</span>
     </a>
 
-    <nav class="nav-links">
-      <a routerLink="/">Home</a>
+    <nav class="nav">
       <a routerLink="/" fragment="applications">Applications</a>
+      <a routerLink="/" fragment="ecosystem">Ecosystem</a>
+      <a routerLink="/" fragment="technology">Technology</a>
       <a routerLink="/pricing" class="active">Pricing</a>
-      <a routerLink="/" fragment="about">About</a>
     </nav>
 
-    <div class="nav-actions">
-      <a routerLink="/login" class="login-link">Sign in</a>
-      <a routerLink="/register" class="nav-cta">
-        Get started
-        <svg LucideArrowRight></svg>
-      </a>
+    <div class="account">
+      @if (auth.initialized()) {
+        @if (auth.isAuthenticated()) {
+          <a routerLink="/console" class="cta">Console</a>
+        } @else {
+          <a routerLink="/login" class="signin">Sign in</a>
+          <a routerLink="/register" class="cta">Get started</a>
+        }
+      }
     </div>
-  </div>
-</header>
+  </header>
 
-<main>
-  <section class="pricing-hero">
-    <div class="hero-container">
-      <div class="eyebrow">
-        <span class="eyebrow-dot"></span>
-        Flexible plans for growing teams
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <p class="pill"><i></i>Simple, transparent pricing</p>
+      <h1>One platform. <em>One fair price.</em></h1>
+      <p class="sub">Start with one application and grow into the whole ecosystem.</p>
+
+      <div class="toggle" role="group" aria-label="Billing period">
+        <button type="button" [class.on]="billing() === 'monthly'" (click)="setBilling('monthly')">Monthly</button>
+        <button type="button" [class.on]="billing() === 'yearly'" (click)="setBilling('yearly')">
+          Yearly <span class="save">Save 20%</span>
+        </button>
       </div>
+    </section>
 
-      <h1>
-        Simple pricing.
-        <span>Room to grow.</span>
-      </h1>
+    <!-- PLANS -->
+    <section class="plans" aria-label="Plans">
+      @for (plan of plans; track plan.id) {
+        <article class="plan" [class.popular]="plan.popular">
+          @if (plan.popular) { <span class="badge">Most popular</span> }
 
-      <p>
-        Start with the tools you need today.
-        Expand your Holdpoint workspace as your
-        organization grows.
-      </p>
+          <h2>{{ plan.name }}</h2>
+          <p class="tagline">{{ plan.tagline }}</p>
 
-      <div class="hero-note">
-         <svg LucideCheck></svg>
-        One ecosystem. Multiple applications.
+          <div class="price">
+            @if (price(plan) === null) {
+              <strong>Custom</strong>
+            } @else {
+              <strong>${{ price(plan) }}</strong>
+              <span>{{ price(plan) === 0 ? 'free forever' : 'per user / month' }}</span>
+            }
+          </div>
+
+          <a [routerLink]="plan.id === 'enterprise' ? '/contact' : '/register'"
+             [queryParams]="plan.id === 'enterprise' ? null : { plan: plan.id }"
+             class="plan-cta">{{ plan.cta }}</a>
+
+          <ul>
+            @for (f of plan.features; track f) {
+              <li>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                {{ f }}
+              </li>
+            }
+          </ul>
+        </article>
+      }
+    </section>
+
+    <!-- COMPARISON -->
+    <section class="compare">
+      <h2>Compare plans</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              @for (plan of plans; track plan.id) { <th>{{ plan.name }}</th> }
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of rows; track row.label) {
+              <tr>
+                <th scope="row">{{ row.label }}</th>
+                @for (v of row.values; track $index) {
+                  <td>
+                    @if (v === 'yes') {
+                      <svg class="yes" viewBox="0 0 24 24" aria-label="Included"><path d="M20 6 9 17l-5-5"/></svg>
+                    } @else if (v === 'no') {
+                      <span class="no" aria-label="Not included">&ndash;</span>
+                    } @else {
+                      {{ v }}
+                    }
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="plans-section">
-    <div class="section-heading">
-      <span class="section-label">OUR PLANS</span>
-      <h2>Choose how you grow</h2>
-      <p>
-        Whether you're starting small or managing
-        complex operations, there's room for you.
-      </p>
-    </div>
+    <!-- FAQ -->
+    <section class="faq">
+      <h2>Questions, answered</h2>
+      @for (item of faqs; track item.q) {
+        <details>
+          <summary>{{ item.q }}</summary>
+          <p>{{ item.a }}</p>
+        </details>
+      }
+    </section>
 
-    <div class="plans-grid">
+    <!-- CTA -->
+    <section class="final">
+      <h2>Ready to run your business in one place?</h2>
+      <a routerLink="/register" class="cta big">Create your account</a>
+    </section>
+  </main>
 
-      <!-- STARTER -->
-      <article class="plan-card">
-        <div class="plan-header">
-          <div class="plan-icon starter-icon">
-            
-          </div>
-          <span class="plan-status">Available now</span>
-        </div>
-
-        <h3>Starter</h3>
-        <p class="plan-description">
-          Everything you need to get started.
-        </p>
-
-        <div class="price">
-          <span class="currency">$</span>
-          <strong>19</strong>
-          <span class="period">/ month</span>
-        </div>
-
-        <p class="billing-note">
-          Suggested starting price
-        </p>
-
-        <a routerLink="/register" class="plan-button secondary-button">
-          Get started
-          <svg LucideArrowRight></svg>
-        </a>
-
-        <div class="plan-divider"></div>
-
-        <h4>What's included</h4>
-
-        <ul class="feature-list">
-          <li>
-            <svg LucideCheck></svg>
-            Resource Management
-          </li>
-          <li>
-            <svg LucideCheck></svg>
-            Resource and capacity tracking
-          </li>
-          <li>
-             <svg LucideCheck></svg>
-            Temporary hold management
-          </li>
-          <li>
-             <svg LucideCheck></svg>
-            Reservation lifecycle management
-          </li>
-          <li>
-             <svg LucideCheck></svg>
-            Standard workspace
-          </li>
-        </ul>
-      </article>
-
-      <!-- BUSINESS -->
-      <article class="plan-card featured-plan">
-        <div class="popular-label">For growing businesses</div>
-
-        <div class="plan-header">
-          <div class="plan-icon business-icon">
-             <svg LucideShieldCheck></svg>
-          </div>
-          <span class="plan-status">Custom plan</span>
-        </div>
-
-        <h3>Business</h3>
-        <p class="plan-description">
-          More flexibility for expanding teams.
-        </p>
-
-        <div class="custom-price">
-          <strong>Custom pricing</strong>
-          <span>Tailored to your organization</span>
-        </div>
-
-        <a href="mailto:sales@holdpoint.com"
-           class="plan-button primary-button">
-          Talk to sales
-           <svg LucideArrowRight></svg>
-        </a>
-
-        <div class="plan-divider"></div>
-
-        <h4>Designed for growing teams</h4>
-
-        <ul class="feature-list">
-          <li>
-             <svg LucideCheck></svg>
-            Starter plan capabilities
-          </li>
-          <li>
-           <svg LucideCheck></svg>
-            Expanded team capabilities
-          </li>
-          <li>
-             <svg LucideCheck></svg>
-            Advanced access controls
-          </li>
-          <li>
-             <svg LucideCheck></svg>
-            Priority support
-          </li>
-          <li>
-             <svg LucideCheck></svg>
-            Custom requirements
-          </li>
-        </ul>
-      </article>
-
-      <!-- ENTERPRISE -->
-      <article class="plan-card">
-        <div class="plan-header">
-          <div class="plan-icon enterprise-icon">
-             <svg LucideShieldCheck></svg>
-          </div>
-          <span class="plan-status">Custom plan</span>
-        </div>
-
-        <h3>Enterprise</h3>
-        <p class="plan-description">
-          Tailored solutions for complex operations.
-        </p>
-
-        <div class="custom-price">
-          <strong>Let's talk</strong>
-          <span>Built around your needs</span>
-        </div>
-
-        <a href="mailto:sales@holdpoint.com"
-           class="plan-button secondary-button">
-          Contact sales
-            <svg LucideArrowRight></svg>
-        </a>
-
-        <div class="plan-divider"></div>
-
-        <h4>Built for your organization</h4>
-
-        <ul class="feature-list">
-          <li>
-             <svg LucideCheck></svg>
-            Advanced business capabilities
-          </li>
-          <li>
-            <svg LucideCheck></svg>
-            Custom deployment requirements
-          </li>
-          <li>
-             <svg LucideCheck></svg>
-            Advanced integrations
-          </li>
-          <li>
-             <svg LucideCheck></svg>
-            Dedicated support options
-          </li>
-          <li>
-             <svg LucideCheck></svg>
-            Tailored agreements
-          </li>
-        </ul>
-      </article>
-
-    </div>
-  </section>
-
-  <section class="apps-note">
-    <div class="apps-note-icon">
-       <svg LucideZap></svg>
-    </div>
-
-    <div>
-      <span class="section-label">THE HOLDPOINT ECOSYSTEM</span>
-      <h2>One workspace. Multiple applications.</h2>
-      <p>
-        Resource Management is currently available.
-        Additional applications are being developed
-        as part of the Holdpoint ecosystem.
-        Availability will be announced as they launch.
-      </p>
-    </div>
-  </section>
-
-  <section class="faq-section">
-    <div class="section-heading">
-      <span class="section-label">NEED CLARITY?</span>
-      <h2>Frequently asked questions</h2>
-    </div>
-
-    <div class="faq-list">
-      <details>
-        <summary>What is included in the Starter plan?</summary>
-        <p>
-          Starter is designed to provide access to the
-          currently available Resource Management
-          application and its core capabilities.
-        </p>
-      </details>
-
-      <details>
-        <summary>Can I upgrade my plan later?</summary>
-        <p>
-          The pricing structure is designed to support
-          organizations as their requirements grow.
-          Contact us to discuss your needs.
-        </p>
-      </details>
-
-      <details>
-        <summary>Are all Holdpoint applications available?</summary>
-        <p>
-          Not yet. Resource Management is currently
-          available. Other applications are planned
-          and will be announced when ready.
-        </p>
-      </details>
-
-      <details>
-        <summary>How does Enterprise pricing work?</summary>
-        <p>
-          Enterprise pricing depends on your
-          organization's requirements, deployment
-          needs, and requested integrations.
-        </p>
-      </details>
-    </div>
-  </section>
-
-  <section class="final-cta">
-    <div class="cta-inner">
-      <span class="section-label">GET STARTED WITH HOLDPOINT</span>
-      <h2>Build your next stage on one ecosystem.</h2>
-      <p>
-        Start with Resource Management and grow
-        your workspace as your needs evolve.
-      </p>
-      <a routerLink="/register" class="cta-button">
-        Get started
-          <svg LucideArrowRight></svg>
-      </a>
-    </div>
-  </section>
-</main>
-
-<footer class="site-footer">
-  <div class="footer-inner">
-    <a routerLink="/" class="brand footer-brand">
-      <span class="brand-mark">
-        <i></i><i></i><i></i><i></i>
-      </span>
-      <span>Holdpoint</span>
-    </a>
-
-    <p>One ecosystem. Multiple applications.</p>
-    <span>© 2026 Holdpoint. All rights reserved.</span>
-  </div>
-</footer>
+</div>

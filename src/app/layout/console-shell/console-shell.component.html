@@ -1,9 +1,8 @@
-
 <div class="console-shell">
- 
+
 <header class="topbar">
 
-  <!-- LEFT: BRAND & APPLICATION -->
+  <!-- LEFT: COMPANY + CURRENT APPLICATION -->
   <div class="topbar-left">
 
     <button
@@ -15,14 +14,21 @@
       <svg lucidePanelLeft></svg>
     </button>
 
-    <a routerLink="/console" class="brand">
-      <span class="brand-mark">
-        <i></i><i></i><i></i><i></i>
-      </span>
+    <!-- Company: returns to the applications launcher -->
+    <a routerLink="/" class="brand" title="All applications">
+      <svg class="brand-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M13 53 32 11l19 42" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="32" cy="42" r="5.5" fill="currentColor"/>
+      </svg>
+      <span class="brand-company">Alhourani</span>
+    </a>
 
-      <span class="brand-name">Holdpoint</span>
-      <span class="brand-divider"></span>
-      <span class="brand-section">Workspace</span>
+    <span class="brand-divider"></span>
+
+    <!-- Current application -->
+    <a routerLink="/console" class="app-chip">
+  
+      <span class="app-name">Holdpoint</span>
     </a>
 
   </div>
@@ -48,28 +54,25 @@
   <!-- RIGHT: ACTIONS -->
   <div class="topbar-actions">
 
-
     <span class="topbar-divider"></span>
 
-
     <!-- HELP -->
-    <span
+    <a
       class="icon-btn utility-btn"
       routerLink="/console/support"
       aria-label="Contact support"
       title="Contact support">
       <svg lucideCircleHelp></svg>
-    </span>
-
-    <!-- HELP -->
-    <a
-      class="icon-btn utility-btn"
-       routerLink="/console/notifications"
-      aria-label="Contact support"
-      title="Contact support">
-      <svg lucideBell></svg>
     </a>
 
+    <!-- NOTIFICATIONS -->
+    <a
+      class="icon-btn utility-btn"
+      routerLink="/console/notifications"
+      aria-label="Notifications"
+      title="Notifications">
+      <svg lucideBell></svg>
+    </a>
 
     <!-- ACCOUNT -->
     <div class="account-wrapper">
@@ -103,7 +106,7 @@
                 {{ auth.currentUser()?.email }}
               </span>
 
-              <small>Holdpoint account</small>
+              <small>Alhourani account</small>
             </div>
 
           </div>
@@ -130,9 +133,6 @@
 </header>
 
 
-
-
-
   <div class="console-body">
     <aside class="sidebar" [class.collapsed]="!open()" aria-label="Main navigation">
       <div class="sidebar-content">
@@ -149,7 +149,7 @@
                   [routerLinkActiveOptions]="{ exact: i.exact }"
                   [title]="!open() ? i.label : ''">
 
-                  <svg [lucideIcon]=i.icon></svg>
+                  <svg class ="nav-icon" [lucideIcon]=i.icon></svg>
                   <span class="nav-label">{{ i.label }}</span>
                 </a>
               }

@@ -39,8 +39,8 @@
 }
 
 .icon-btn {
-  width: 37px;
-  height: 37px;
+  width: 32px;
+  height: 32px;
   display: grid;
   place-items: center;
   border: 1px solid transparent;
@@ -61,6 +61,9 @@
   width: 19px;
   height: 19px;
 }
+/* ===== Replace these rules in console.component.css ===== */
+/* Delete: .brand, .brand-mark, .brand-mark i (and its 4 nth-child rules),
+   .brand-name, .brand-divider, .brand-section — then paste this block. */
 
 .brand {
   display: flex;
@@ -72,38 +75,12 @@
 }
 
 .brand-mark {
-  width: 27px;
-  height: 27px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 3px;
-  transform: rotate(-8deg);
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
 }
 
-.brand-mark i {
-  display: block;
-  border-radius: 3px;
-}
-
-.brand-mark i:nth-child(1) {
-  background: #4285F4;
-}
-
-.brand-mark i:nth-child(2) {
-  background: #EA4335;
-}
-
-.brand-mark i:nth-child(3) {
-  background: #FBBC05;
-}
-
-.brand-mark i:nth-child(4) {
-  background: #34A853;
-}
-
-
-.brand-name {
+.brand-company {
   font-size: 17px;
   font-weight: 780;
   letter-spacing: -.6px;
@@ -116,10 +93,61 @@
   background: #e1e6ee;
 }
 
-.brand-section {
-  color: #8995a8;
-  font-size: 12px;
-  font-weight: 600;
+.app-chip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 4px 11px 4px 4px;
+  border-radius: 9px;
+  color: #172033;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .2s;
+}
+
+.app-chip:hover {
+  background: #f1f5fb;
+}
+
+.app-icon {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: #2563eb;
+}
+
+.app-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.app-name {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+}
+
+/* ===== In the @media (max-width: 650px) block =====
+   Delete: .brand-name, .brand-section / .brand-divider, .brand-mark rules,
+   then add: */
+
+@media (max-width: 650px) {
+  .brand-company,
+  .brand-divider {
+    display: none;
+  }
+
+  .brand-mark {
+    width: 24px;
+    height: 24px;
+  }
+
+  .app-name {
+    font-size: 14px;
+  }
 }
 
 /* Search */
@@ -415,7 +443,7 @@
   font-weight: 700;
 }
 
-.nav-link.active::before {
+/* .nav-link.active::before {
   position: absolute;
   top: 9px;
   bottom: 9px;
@@ -424,7 +452,7 @@
   border-radius: 0 4px 4px 0;
   background: #2563eb;
   content: "";
-}
+} */
 
 .nav-icon {
   width: 19px;

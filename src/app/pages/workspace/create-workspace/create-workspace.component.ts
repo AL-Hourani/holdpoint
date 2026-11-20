@@ -39,7 +39,7 @@ export class CreateWorkspaceComponent {
 
 
   readonly previewUrl = computed(() =>
-    `holdpoint.com/${this.form.getRawValue().slug || 'your-workspace'}`
+    `alhourani.com/${this.form.getRawValue().slug || 'your-workspace'}`
   );
 
 
@@ -71,8 +71,7 @@ export class CreateWorkspaceComponent {
         this.loading.set(false);
 
         this.router.navigate([
-          '/console',
-          workspace.slug
+          '/login'
         ]);
       },
       error: (error) => {

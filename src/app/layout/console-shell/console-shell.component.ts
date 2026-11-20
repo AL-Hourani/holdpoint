@@ -112,6 +112,8 @@ readonly nav = [
   },
  
 ];
+
+ 
   // initial() { return (this.auth.name() || this.auth.email() || '?').charAt(0).toUpperCase(); }
   search(e: Event, q: string) { e.preventDefault(); this.router.navigate(['/console/resources'], { queryParams: { q: q.trim() || null } }); }
 }

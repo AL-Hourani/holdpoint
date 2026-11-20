@@ -1,1 +1,9 @@
-{ "/api": { "target": "https://holdpoint-api-cyqe.onrender.com", "secure": true } }
+
+{
+  "/api": {
+    "target": "https://holdpoint-api-cyqe.onrender.com",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

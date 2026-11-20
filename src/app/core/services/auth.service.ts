@@ -11,6 +11,7 @@ import {
   TokenResponse
 } from '../models/auth.model';
 import { APP_CONFIG } from '../config';
+import { appConfig } from '../../app.config';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -115,7 +116,16 @@ export class AuthService {
 
 
   logout() {
-
+    return this.http.post(
+      `${APP_CONFIG.apiBase}/auth/logout` , {} ,
+      {
+        withCredentials : true
+      }
+    ).pipe(
+      tap(()=>{
+        this.router.navigate(['/'])
+      })
+    )
   }
  
 }

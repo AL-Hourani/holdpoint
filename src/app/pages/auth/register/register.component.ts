@@ -57,7 +57,7 @@ export class RegisterComponent {
     )
     .subscribe({
       next: () => {
-        this.router.navigateByUrl('/login');
+        this.router.navigateByUrl('/workspaces/create');
       },
 
       error: (e) => {

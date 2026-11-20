@@ -1,564 +1,72 @@
+<div class="page">
 
-<header class="topbar">
-  <div class="nav-container">
-    <a routerLink="/" class="brand">
-      <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="220 -25 240 240" xmlns:c2pa="http://c2pa.org/manifest">
-        <polygon points="320,30 360,30 420,160 380,160 340,75 300,160 260,160" fill="#111111"/>
-        <circle cx="340" cy="136" r="14" fill="#111111"/>
+  <header class="topbar">
+    <a routerLink="/" class="brand" aria-label="Alhourani home">
+      <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M13 53 32 11l19 42" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="32" cy="42" r="5.5" fill="currentColor"/>
       </svg>
-      <span>Alhourani</span>
+      <span>ALHOURANI</span>
     </a>
 
-    <nav class="nav-links">
-      <a href="#applications">Applications</a>
+    <nav class="nav">
+      <a href="#applications">Applications
+        <svg class="caret" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </a>
       <a href="#ecosystem">Ecosystem</a>
       <a href="#technology">Technology</a>
       <a routerLink="/pricing">Pricing</a>
     </nav>
 
+  
 
-    @if (auth.initialized()) {
-
-      @if (auth.isAuthenticated()) {
-
-        <div class="welcome">
-          <span>Welcome back,</span>
-          <strong>{{ auth.currentUser()?.fullName }}</strong>
-        </div>
-
-      } @else {
-
-        <div class="nav-actions">
-
-          <a routerLink="/login" class="login-link">
-            Sign in
+    <div class="account">
+      @if (auth.initialized()) {
+        @if (auth.isAuthenticated()) {
+          <div class="user">
+            <svg lucideUserRound></svg>
+            <span >{{ auth.currentUser()?.fullName }}</span>
+          </div>
+          <a routerLink="/console" class="cta">Console
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
           </a>
-
-          <a routerLink="/register" class="nav-cta">
-            Get started
-            <svg lucideArrowUpRight></svg>
+        } @else {
+          <a routerLink="/login" class="signin">Sign in</a>
+          <a routerLink="/register" class="cta">Get started
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
           </a>
-
-        </div>
-
+        }
       }
+    </div>
+  </header>
 
-    }
+  <main class="hero">
+    <span class="deco d1"></span><span class="deco d2"></span><span class="deco d3"></span>
+    <span class="deco d4"></span><span class="deco d5"></span><span class="deco d6"></span>
 
-   
-  </div>
-</header>
+    <p class="pill"><i></i>A Complete Business Ecosystem</p>
 
-<main>
+    <h1>Everything your business <em>needs.</em></h1>
+    <p class="sub">Connected applications. One ecosystem.</p>
 
-  <!-- HERO -->
-  <section class="hero ecosystem-hero" id="platform">
-    <div class="hero-grid-bg"></div>
-
-    <div class="hero-container">
-      <div class="hero-copy">
-        <div class="eyebrow">
-          <span class="live-dot"></span>
-          THE  APPLICATION ECOSYSTEM
-        </div>
-
-        <h1>
-          One ecosystem.
-          <span>Multiple applications.</span>
-        </h1>
-
-        <p class="hero-description">
-          A connected ecosystem of specialized business applications.
-          Discover the tools you need, manage your operations,
-          and grow with one unified platform.
-        </p>
-
-        <div class="hero-actions">
-          <a href="#applications" class="btn-primary">
-            Explore applications
-            <svg lucideArrowRight></svg>
-          </a>
-
-          <a routerLink="/register" class="btn-secondary">
-            Get started
-            <svg lucideArrowUpRight></svg>
-          </a>
-        </div>
-
-        <div class="hero-trust">
-          <span class="trust-icon">
-            <svg lucideLayers></svg>
+    <section class="grid" id="applications" aria-label="Applications">
+      @for (app of apps; track app.id) {
+        <button type="button" class="card" [attr.aria-disabled]="!app.available"
+                [attr.title]="app.available ? null : 'Coming soon'"
+                [style.--c1]="app.c1" [style.--c2]="app.c2" (click)="open(app)">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              @for (d of app.icon; track d) { <path [attr.d]="d" /> }
+            </svg>
           </span>
-          <span>One platform. Specialized tools. Connected experiences.</span>
-        </div>
-      </div>
+          <span class="name">{{ app.name }}</span>
+          @if (!app.available) { <span class="soon">Soon</span> }
+        </button>
+      }
+    </section>
 
-      <!-- ECOSYSTEM VISUAL -->
-      <div class="hero-visual ecosystem-visual">
-        <div class="visual-orbit orbit-one"></div>
-        <div class="visual-orbit orbit-two"></div>
 
-        <div class="ecosystem-window">
-          <div class="dashboard-topbar">
-            <div class="dashboard-brand">
-              <span class="">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="220 -25 240 240" xmlns:c2pa="http://c2pa.org/manifest">
-                  <polygon points="320,30 360,30 420,160 380,160 340,75 300,160 260,160" fill="#111111"/>
-                  <circle cx="340" cy="136" r="14" fill="#111111"/>
-                </svg>
-              </span>
-              <span>Alhourani</span>
-              <span class="dashboard-separator">/</span>
-              <span class="dashboard-muted">Applications</span>
-            </div>
-            <div class="window-controls"><i></i><i></i><i></i></div>
-          </div>
+    <div class="wave"></div>
+  </main>
 
-          <div class="ecosystem-window-content">
-            <div class="dashboard-heading">
-              <div>
-                <span class="dashboard-overline">YOUR WORKSPACE</span>
-                <h3>Application center</h3>
-                <p>Everything connected in one place.</p>
-              </div>
-              <div class="dashboard-avatar">H</div>
-            </div>
-
-            <div class="ecosystem-app-grid">
-              <div class="ecosystem-app active-app">
-                <span class="app-icon blue-bg">
-                  <svg lucideLayers></svg>
-                </span>
-                <strong>Resource Management</strong>
-                <small>Manage resources and reservations</small>
-                <span class="app-active-label">
-                  <i></i> Available
-                </span>
-              </div>
-
-              <div class="ecosystem-app future-app">
-                <span class="app-icon green-bg">
-                  <svg lucideCalendarDays></svg>
-                </span>
-                <strong>Scheduling</strong>
-                <small>Coordinate schedules and availability</small>
-                <span class="app-future-label">Coming soon</span>
-              </div>
-
-              <div class="ecosystem-app future-app">
-                <span class="app-icon purple-bg">
-                  <svg lucideWorkflow></svg>
-                </span>
-                <strong>Workflow</strong>
-                <small>Organize business processes</small>
-                <span class="app-future-label">Coming soon</span>
-              </div>
-
-              <div class="ecosystem-app future-app">
-                <span class="app-icon orange-bg">
-                  <svg lucideChartNoAxesCombined></svg>
-                </span>
-                <strong>Analytics</strong>
-                <small>Understand operational performance</small>
-                <span class="app-future-label">Coming soon</span>
-              </div>
-            </div>
-
-            <div class="ecosystem-window-footer">
-              <svg lucideShieldCheck></svg>
-              One unified platform experience
-            </div>
-          </div>
-        </div>
-
-        <div class="floating-card floating-top">
-          <span class="floating-card-icon green-icon">
-            <svg lucideLayers></svg>
-          </span>
-          <div>
-            <strong>One ecosystem</strong>
-            <span>Multiple specialized applications</span>
-          </div>
-        </div>
-
-        <div class="floating-card floating-bottom">
-          <span class="floating-card-icon blue-icon">
-            <svg lucideShieldCheck></svg>
-          </span>
-          <div>
-            <strong>Unified experience</strong>
-            <span>Designed to work together</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="hero-bottom">
-      <span>THE HOLDPOINT APPROACH</span>
-      <div class="hero-bottom-items">
-        <span><svg lucideBlocks></svg> Specialized applications</span>
-        <span><svg lucideNetwork></svg> Connected ecosystem</span>
-        <span><svg lucideTrendingUp></svg> Built to scale</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- INTRODUCTION -->
-  <section class="intro-section" id="ecosystem">
-    <div class="section-container intro-grid">
-      <div class="intro-label">
-        <span class="section-index">01 / THE ECOSYSTEM</span>
-        <span class="intro-line"></span>
-      </div>
-
-      <div class="intro-content">
-        <h2>
-          Different challenges.
-          <span>One connected platform.</span>
-        </h2>
-
-        <p>
-          Businesses need different tools to manage different parts
-          of their operations. Holdpoint brings specialized applications
-          together under one ecosystem, making it easier to discover,
-          access, and expand the tools your organization needs.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- APPLICATIONS -->
-  <section class="capabilities-section applications-section"
-           id="applications">
-    <div class="section-container">
-
-      <div class="section-topline">
-        <span class="section-index">02 / OUR APPLICATIONS</span>
-        <span class="section-tag">EXPLORE THE ECOSYSTEM</span>
-      </div>
-
-      <div class="capabilities-heading">
-        <div>
-          <h2>
-            Applications built
-            <span>for real operations.</span>
-          </h2>
-        </div>
-        <p>
-          Each application is designed around a specific operational
-          need, with a shared vision of simplicity, reliability,
-          and connected experiences.
-        </p>
-      </div>
-
-      <div class="applications-grid">
-
-        <!-- AVAILABLE APP -->
-        <article class="capability-card application-card featured-app">
-          <div class="capability-top">
-            <span class="capability-icon blue-bg">
-              <svg lucideLayers></svg>
-            </span>
-            <span class="app-status available-status">
-              <i></i> Available
-            </span>
-          </div>
-
-          <span class="application-category">OPERATIONS & RESOURCES</span>
-
-          <h3>Resource Management</h3>
-
-          <p>
-            Manage resources, control capacity, and coordinate
-            reservations through a structured and reliable system.
-          </p>
-
-          <div class="application-features">
-            <span><svg lucideCheck></svg> Resource management</span>
-            <span><svg lucideCheck></svg> Capacity control</span>
-            <span><svg lucideCheck></svg> Reservations and holds</span>
-          </div>
-
-          <a routerLink="/register" class="application-link">
-            Explore application <svg lucideArrowUpRight></svg>
-          </a>
-
-          <span class="card-bottom-label">01 — RESOURCE OPERATIONS</span>
-        </article>
-
-        <!-- FUTURE APP -->
-        <article class="capability-card application-card">
-          <div class="capability-top">
-            <span class="capability-icon green-bg">
-              <svg lucideCalendarDays></svg>
-            </span>
-            <span class="app-status future-status">Coming soon</span>
-          </div>
-
-          <span class="application-category">OPERATIONS & PLANNING</span>
-
-          <h3>Scheduling</h3>
-
-          <p>
-            Coordinate schedules, manage availability,
-            and organize time-based operational activities.
-          </p>
-
-          <div class="application-features">
-            <span><svg lucideCheck></svg> Schedule coordination</span>
-            <span><svg lucideCheck></svg> Availability planning</span>
-          </div>
-
-          <span class="card-bottom-label">02 — SCHEDULING</span>
-        </article>
-
-        <article class="capability-card application-card">
-          <div class="capability-top">
-            <span class="capability-icon purple-bg">
-              <svg lucideWorkflow></svg>
-            </span>
-            <span class="app-status future-status">Coming soon</span>
-          </div>
-
-          <span class="application-category">BUSINESS & PRODUCTIVITY</span>
-
-          <h3>Workflow</h3>
-
-          <p>
-            Structure business processes, coordinate tasks,
-            and bring consistency to everyday operations.
-          </p>
-
-          <div class="application-features">
-            <span><svg lucideCheck></svg> Process organization</span>
-            <span><svg lucideCheck></svg> Workflow automation</span>
-          </div>
-
-          <span class="card-bottom-label">03 — BUSINESS WORKFLOWS</span>
-        </article>
-
-        <article class="capability-card application-card">
-          <div class="capability-top">
-            <span class="capability-icon orange-bg">
-              <svg lucideChartNoAxesCombined></svg>
-            </span>
-            <span class="app-status future-status">Coming soon</span>
-          </div>
-
-          <span class="application-category">DATA & INTELLIGENCE</span>
-
-          <h3>Analytics</h3>
-
-          <p>
-            Turn operational information into meaningful insights
-            and understand how your organization performs.
-          </p>
-
-          <div class="application-features">
-            <span><svg lucideCheck></svg> Operational insights</span>
-            <span><svg lucideCheck></svg> Performance reporting</span>
-          </div>
-
-          <span class="card-bottom-label">04 — BUSINESS INTELLIGENCE</span>
-        </article>
-
-      </div>
-
-      <div class="applications-note">
-        <svg lucideInfo></svg>
-        <p>
-          Some applications are planned for future development.
-          Availability and features will be announced as they launch.
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- HOW ECOSYSTEM WORKS -->
-  <section class="workflow-section ecosystem-how-section">
-    <div class="section-container">
-      <div class="section-topline">
-        <span class="section-index">03 / ONE CONNECTED EXPERIENCE</span>
-        <span class="section-tag">DESIGNED TO WORK TOGETHER</span>
-      </div>
-
-      <div class="workflow-layout">
-        <div class="workflow-intro">
-          <h2>
-            Independent applications.
-            <span>Shared foundation.</span>
-          </h2>
-
-          <p>
-            Each Holdpoint application serves its own purpose,
-            while the ecosystem creates a consistent experience
-            across your organization's tools.
-          </p>
-
-          <a href="#technology" class="text-link">
-            Discover our approach
-            <svg lucideArrowRight></svg>
-          </a>
-        </div>
-
-        <div class="workflow-steps">
-
-          <article class="workflow-step">
-            <span class="step-number">01</span>
-            <div class="step-icon">
-              <svg lucideGrid2x2></svg>
-            </div>
-            <div class="step-content">
-              <h3>Discover applications</h3>
-              <p>
-                Explore specialized tools and choose the applications
-                that fit your operational requirements.
-              </p>
-            </div>
-          </article>
-
-          <article class="workflow-step">
-            <span class="step-number">02</span>
-            <div class="step-icon">
-              <svg lucideUserRoundCheck></svg>
-            </div>
-            <div class="step-content">
-              <h3>Access your workspace</h3>
-              <p>
-                Use a unified account and access the applications
-                enabled for your organization.
-              </p>
-            </div>
-          </article>
-
-          <article class="workflow-step">
-            <span class="step-number">03</span>
-            <div class="step-icon">
-              <svg lucideNetwork></svg>
-            </div>
-            <div class="step-content">
-              <h3>Expand your ecosystem</h3>
-              <p>
-                Add applications as your organization's needs grow,
-                with integration where it delivers real value.
-              </p>
-            </div>
-          </article>
-
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TECHNOLOGY -->
-  <section class="intro-section technology-section" id="technology">
-    <div class="section-container intro-grid">
-
-      <div class="intro-label">
-        <span class="section-index">04 / OUR FOUNDATION</span>
-        <span class="intro-line"></span>
-      </div>
-
-      <div class="intro-content">
-        <h2>
-          Built on a foundation
-          <span>designed to scale.</span>
-        </h2>
-
-        <p>
-          Holdpoint is being developed with a focus on secure access,
-          dependable systems, and a modular architecture.
-          Our goal is to create applications that can evolve
-          independently while supporting a unified platform.
-        </p>
-
-        <div class="technology-points">
-          <div><svg lucideShieldCheck></svg> Security-conscious design</div>
-          <div><svg lucideBlocks></svg> Modular application architecture</div>
-          <div><svg lucideNetwork></svg> Integration-ready foundation</div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- FINAL CTA -->
-  <section class="final-cta">
-    <div class="section-container">
-      <div class="cta-inner">
-
-        <div class="cta-decoration">
-          <span></span><span></span><span></span><span></span>
-        </div>
-
-        <div class="cta-content">
-          <span class="cta-overline">
-            <span class="live-dot"></span>
-            START WITH HOLDPOINT
-          </span>
-
-          <h2>
-            Find the tools you need.
-            <span>Grow with one ecosystem.</span>
-          </h2>
-
-          <p>
-            Explore the first Holdpoint application
-            and discover a better way to organize your operations.
-          </p>
-
-          <div class="hero-actions">
-            <a routerLink="/register" class="cta-button">
-              Create your account
-              <svg lucideArrowUpRight></svg>
-            </a>
-
-            <a href="#applications" class="btn-secondary">
-              Explore applications
-              <svg lucideArrowRight></svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="cta-side">
-          <span class="cta-mark">H</span>
-          <span>ONE ECOSYSTEM</span>
-          <span>MULTIPLE APPS</span>
-          <span>BUILT TO SCALE</span>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<footer class="site-footer">
-  <div class="section-container footer-inner">
-
-    <a routerLink="/" class="brand footer-brand">
-      <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="220 -25 240 240" xmlns:c2pa="http://c2pa.org/manifest">
-        <polygon points="320,30 360,30 420,160 380,160 340,75 300,160 260,160" fill="#111111"/>
-        <circle cx="340" cy="136" r="14" fill="#111111"/>
-      </svg>
-      <span>Alhourani</span>
-    </a>
-
-    <span class="footer-description">
-      One ecosystem. Multiple applications.
-    </span>
-
-    <div class="footer-links">
-      <a href="#applications">Applications</a>
-      <a href="#technology">Technology</a>
-      <a routerLink="/pricing">Pricing</a>
-      <a routerLink="/login">Sign in</a>
-    </div>
-
-    <span class="copyright">
-      © 2026 Alhourani. All rights reserved.
-    </span>
-
-  </div>
-</footer>
+</div>

@@ -1,88 +1,54 @@
-
 <div class="auth-page">
-
   <div class="auth-shell">
 
-    <!-- Brand / Introduction -->
+    <!-- Left: brand panel -->
     <aside class="auth-aside">
 
       <a routerLink="/" class="brand">
-        <span class="brand-mark">
-          <i></i><i></i><i></i><i></i>
-        </span>
-        <span>Holdpoint</span>
+        <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path d="M13 53 32 11l19 42" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="32" cy="42" r="5.5" fill="currentColor"/>
+        </svg>
+        <span>ALHOURANI</span>
       </a>
 
       <div class="aside-content">
-        <span class="eyebrow">
-          <span class="status-dot"></span>
-          RESOURCE MANAGEMENT PLATFORM
-        </span>
+        <p class="pill"><i></i>Create your workspace</p>
 
-        <h2>
-          Manage your resources.
-          <span>With confidence.</span>
-        </h2>
+        <h2>Start with one app. <em>Grow with the ecosystem.</em></h2>
+        <p class="lead">One account gives you access to every application as it launches.</p>
 
-        <p>
-          A smarter way to manage capacity, reservations,
-          and resource availability — all in one place.
-        </p>
 
-        <div class="feature-list">
-          <div class="feature">
-            <span class="feature-icon">01</span>
-            <div>
-              <strong>Real-time visibility</strong>
-              <small>Know exactly what is available.</small>
-            </div>
-          </div>
 
-          <div class="feature">
-            <span class="feature-icon">02</span>
-            <div>
-              <strong>Reliable reservations</strong>
-              <small>Keep every hold under control.</small>
-            </div>
-          </div>
-
-          <div class="feature">
-            <span class="feature-icon">03</span>
-            <div>
-              <strong>Built for teams</strong>
-              <small>Bring your operations together.</small>
-            </div>
-          </div>
-        </div>
+        <ul class="points">
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Real-time visibility of resources</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Reliable reservations and holds</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Built for teams</li>
+        </ul>
       </div>
 
       <div class="aside-footer">
-        <span>© 2026 Holdpoint</span>
-        <span>Built for better operations.</span>
+        <span>&copy; 2026 Alhourani</span>
+        <span>One ecosystem. Multiple applications.</span>
       </div>
-
     </aside>
 
-    <!-- Registration Form -->
+    <!-- Right: form -->
     <main class="auth-main">
 
-      <div class="mobile-brand">
-        <a routerLink="/" class="brand">
-          <span class="brand-mark">
-            <i></i><i></i><i></i><i></i>
-          </span>
-          <span>Holdpoint</span>
-        </a>
-      </div>
+      <a routerLink="/" class="brand mobile-brand">
+        <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path d="M13 53 32 11l19 42" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="32" cy="42" r="5.5" fill="currentColor"/>
+        </svg>
+        <span>ALHOURANI</span>
+      </a>
 
       <div class="form-container">
 
         <div class="form-heading">
-          <span class="form-label">GET STARTED</span>
           <h1>Create your account</h1>
-          <p>
-            Start managing your resources with Holdpoint.
-          </p>
+          <p>Start managing your operations with Alhourani.</p>
         </div>
 
         <form class="ac" [formGroup]="form" (ngSubmit)="submit()">
@@ -90,101 +56,64 @@
           <div class="field">
             <label for="n">Full name</label>
             <div class="input-wrap">
-              <span class="field-icon">
-                <svg lucideUserRound></svg>
-              </span>
-              <input
-                id="n"
-                type="text"
-                formControlName="fullName"
-                placeholder="Enter your full name"
-                autocomplete="name"
-              />
+              <span class="field-icon"><svg lucideUserRound></svg></span>
+              <input id="n" type="text" formControlName="fullName"
+                     placeholder="Enter your full name" autocomplete="name" />
             </div>
           </div>
 
           <div class="field">
             <label for="e">Work email</label>
             <div class="input-wrap">
-              <span class="field-icon">
-                <svg lucideMail></svg>
-              </span>
-              <input
-                id="e"
-                type="email"
-                formControlName="email"
-                placeholder="you@company.com"
-                autocomplete="email"
-              />
+              <span class="field-icon"><svg lucideMail></svg></span>
+              <input id="e" type="email" formControlName="email"
+                     placeholder="you@company.com" autocomplete="email" />
             </div>
           </div>
 
           <div class="field">
             <label for="p">Password</label>
             <div class="input-wrap">
-              <span class="field-icon">lock</span>
-              <input
-                id="p"
-                type="password"
-                formControlName="password"
-                placeholder="Create a strong password"
-                autocomplete="new-password"
-              />
+              <span class="field-icon">
+                <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+              </span>
+              <input id="p" type="password" formControlName="password"
+                     placeholder="Create a strong password" autocomplete="new-password" />
             </div>
-            <span class="field-hint">
-              Use at least 12 characters.
-            </span>
+            <span class="field-hint">Use at least 12 characters.</span>
           </div>
 
           @if (error()) {
             <div class="error-message" role="alert">
-              <span class="error-icon">!</span>
+              <span class="error-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+              </span>
               <span>{{ error() }}</span>
             </div>
           }
 
-          <button
-            type="submit"
-            class="submit-btn"
-            [disabled]="form.invalid || busy()">
-
+          <button type="submit" class="submit-btn" [disabled]="form.invalid || busy()">
             <span>{{ busy() ? 'Creating account...' : 'Create account' }}</span>
-
             @if (!busy()) {
-              <span class="arrow">→</span>
-            }
-
-            @if (busy()) {
+              <span class="arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+            } @else {
               <span class="spinner"></span>
             }
-
           </button>
 
-          <div class="form-divider">
-            <span>ALREADY HAVE AN ACCOUNT?</span>
-          </div>
+          <div class="form-divider"><span>Already have an account?</span></div>
 
-          <a routerLink="/login" class="signin-link">
-            Sign in to your account
-            <span><svg lucideArrowRight></svg></span>
-          </a>
+          <a routerLink="/login" class="signin-link">Sign in to your account</a>
 
         </form>
 
-        <p class="legal-note">
-          By creating an account, you agree to use Holdpoint
-          responsibly and securely.
-        </p>
-
+        <p class="legal-note">By creating an account, you agree to use Alhourani responsibly and securely.</p>
       </div>
 
       <div class="main-footer">
         <span>Secure account registration</span>
-        <span>Holdpoint Platform</span>
       </div>
-
     </main>
 
   </div>
-
 </div>
