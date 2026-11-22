@@ -33,13 +33,8 @@ export const routes: Routes = [
       { path: 'resources/:id', title: 'Resource · Holdpoint', loadComponent: () => import('./pages/resources/resource-detail/resource-detail.component').then(m => m.ResourceDetailComponent) },
       { path: 'holds', title: 'Holds · Holdpoint', loadComponent: () => import('./pages/holds/hold-list/hold-list.component').then(m => m.HoldListComponent) },
       { path: 'holds/new', title: 'Create hold · Holdpoint', loadComponent: () => import('./pages/holds/hold-create/hold-create.component').then(m => m.HoldCreateComponent) },
+
       {
-        path: 'bookings',
-        loadComponent: () =>
-          import('./pages/bookings/bookings.component')
-            .then(m => m.BookingsComponent)
-      }
-      ,{
           path: 'team',
           loadComponent: () =>
             import('./pages/team/team.component')

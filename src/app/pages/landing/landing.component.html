@@ -53,11 +53,9 @@
       @for (app of apps; track app.id) {
         <button type="button" class="card" [attr.aria-disabled]="!app.available"
                 [attr.title]="app.available ? null : 'Coming soon'"
-                [style.--c1]="app.c1" [style.--c2]="app.c2" (click)="open(app)">
+               (click)="open(app)">
           <span class="icon">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              @for (d of app.icon; track d) { <path [attr.d]="d" /> }
-            </svg>
+            <img [src]="app.icon" [alt]="app.name" width="84" height="84">
           </span>
           <span class="name">{{ app.name }}</span>
           @if (!app.available) { <span class="soon">Soon</span> }

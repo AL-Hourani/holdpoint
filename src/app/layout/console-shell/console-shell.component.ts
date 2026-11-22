@@ -2,23 +2,17 @@ import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
-
+import { WorkspaceSwitcherComponent } from '../../pages/workspace/switch-workspace/workspace-switcher.component';
 import {
   LucideDynamicIcon,
   LucidePanelLeft,
-  LucideSearch,
-  LucidePlus,
-  LucideLogOut,
-  LucideLayersPlus,
   LucidePanelsTopLeft,
   LucideDatabase,
   LucideBookmark,
-  LucideClipboardClock,
   LucideUsersRoundCollaboration,
   LucideListClock,
   LucideSettings,
   LucideCalendarCheck,
-  LucideCircleHelp,
   LucideBell
 } from '@lucide/angular';
 
@@ -26,13 +20,14 @@ import {
   selector: 'app-console-shell',
   standalone : true,
   imports: [
+  WorkspaceSwitcherComponent,
   RouterOutlet,
   RouterLink,
   RouterLinkActive,
   LucideDynamicIcon,
-  LucideCalendarCheck,
-  LucideCircleHelp,
-  LucideBell
+  LucideBell,
+  LucidePanelLeft,
+  
 ],
   templateUrl: './console-shell.component.html' ,
   styleUrl:'./console-layout.component.css'
@@ -72,12 +67,6 @@ readonly nav = [
         icon:   LucideBookmark,
         label: 'Holds',
         link: '/console/holds',
-        exact: false
-      },
-      {
-        icon:  LucideClipboardClock,
-        label: 'Bookings',
-        link: '/console/bookings',
         exact: false
       },
     ]

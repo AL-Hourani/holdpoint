@@ -16,13 +16,14 @@ import {
   LucideArrowBigRight,
   LucideCircleX,
   LucideUserRound,
-   LucidePanelLeft,
+  LucidePanelLeft,
   LucideSearch,
   LucidePlus,
   LucideLogOut,
   LucideLayersPlus,
   LucideChevronRight,
-  LucidePackagePlus
+  LucidePackagePlus,
+  
   
 } from '@lucide/angular';
 

@@ -8,5 +8,10 @@ export interface Hold {
     createdAt: string; 
     expiresAt: string; 
 }
-export interface CreateHoldRequest { resourceId: string; holderName: string; quantity: number; durationMinutes: number; }
+export interface CreateHoldRequest { 
+    resourceId: string; 
+    holderName: string; 
+    quantity: number; 
+    durationMinutes: number; 
+}
 export interface HoldFilter { resourceId?: string; status?: HoldStatus; }

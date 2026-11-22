@@ -1,0 +1,17 @@
+<div class="ws">
+  <svg lucideLayers class="ws__icon" aria-hidden="true"></svg>
+
+  <select
+    class="ws__select"
+    aria-label="Workspace"
+    [value]="ws.currentId()"
+    (change)="onChange($event)"
+  >
+    <option value="" disabled [selected]="!ws.currentId()">Select a workspace</option>
+    @for (w of ws.workspaces(); track w.id) {
+      <option [value]="w.id">{{ w.name }}</option>
+    }
+  </select>
+
+  <svg lucideChevronDown class="ws__chevron" aria-hidden="true"></svg>
+</div>

@@ -20,16 +20,20 @@
         <path d="M13 53 32 11l19 42" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
         <circle cx="32" cy="42" r="5.5" fill="currentColor"/>
       </svg>
-      <span class="brand-company">Alhourani</span>
+      <span class="brand-company">ALHOURANI</span>
     </a>
 
     <span class="brand-divider"></span>
 
     <!-- Current application -->
     <a routerLink="/console" class="app-chip">
-  
       <span class="app-name">Holdpoint</span>
+      
     </a>
+
+
+    <!-- workspaces -->
+     <app-workspace-switcher />
 
   </div>
 
@@ -136,6 +140,8 @@
   <div class="console-body">
     <aside class="sidebar" [class.collapsed]="!open()" aria-label="Main navigation">
       <div class="sidebar-content">
+      
+        <!-- nav -->
         @for (g of nav; track g.h) {
           <section class="nav-group">
             <h4>{{ g.h }}</h4>

@@ -8,9 +8,7 @@ export interface AppTile {
   name: string;
   route: string;
   available: boolean;
-  c1: string; // icon gradient top
-  c2: string; // icon gradient bottom
-  icon: string[]; // svg path data, 24x24 grid
+  icon:string;
 }
 
 const PURPLE = ['#b866f0', '#8b3fe0'];
@@ -35,17 +33,13 @@ export class LandingComponent {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
-  private tile(id: string, name: string, [c1, c2]: string[], icon: string[], available = false): AppTile {
-    return { id, name, c1, c2, icon, available, route: `/apps/${id}` };
+  private tile(id: string, name: string, available = false , icon = `/${id.toLowerCase()}.svg`): AppTile {
+    return { id, name, available, route: `/apps/${id}` , icon};
   }
 
   readonly apps: AppTile[] = [
-    { ...this.tile('Holdpoint', 'Holdpoint', BLUE, [
-      'M38 26h-8a6 6 0 0 0-6 6v32a6 6 0 0 0 6 6h8','M58 26h8a6 6 0 0 1 6 6v32a6 6 0 0 1-6 6h-8'
-    ], true), route: '/console' },
-    { ...this.tile('Bookings', 'Bookings', PURPLE, [
-      'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z', 'M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1',
-    ], false), route: '/console' },
+    { ...this.tile('Holdpoint', 'Holdpoint', true), route: '/console' ,  },
+    { ...this.tile('Bookings', 'Bookings', false), route: '/console' ,  },
 
   ];
 

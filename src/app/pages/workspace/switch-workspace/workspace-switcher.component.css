@@ -1,0 +1,47 @@
+.ws {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  min-width: 200px;
+  max-width: 280px;
+}
+
+.ws__select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 100%;
+  padding: 0 34px 0 34px;
+  font: 500 14px/1 inherit;
+  color: #202124;
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+}
+
+.ws__select:hover { background: #f8f9fa; border-color: #bdc1c6; }
+
+.ws__select:focus-visible {
+  outline: none;
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, .2);
+}
+
+/* لون رمادي عندما لا توجد مساحة محددة */
+.ws__select:has(option[value=""]:checked) { color: #5f6368; }
+
+.ws__icon,
+.ws__chevron {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  color: #5f6368;
+  pointer-events: none;
+}
+.ws__icon { left: 10px; }
+.ws__chevron { right: 10px; transition: color .15s; }
+.ws:focus-within .ws__chevron { color: #1a73e8; }
