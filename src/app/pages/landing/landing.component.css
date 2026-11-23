@@ -63,8 +63,8 @@ svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; 
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 20px;
-  border-radius: 999px;
+  padding: 12px 15px;
+  border-radius: 12px;
   background: var(--navy);
   color: #fff;
   font-weight: 600;
@@ -211,3 +211,17 @@ h1 em {
   .signin { display: none; }
   .topbar { height: 76px; }
 }
+
+
+
+.account { display: flex; align-items: center; gap: 12px; min-width: 220px; justify-content: flex-end; }
+
+.account-skeleton {
+  width: 200px; height: 40px; border-radius: 999px;
+  background: linear-gradient(90deg, #eceef1 25%, #f6f7f9 50%, #eceef1 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+@media (prefers-reduced-motion: reduce) { .account-skeleton { animation: none; } }

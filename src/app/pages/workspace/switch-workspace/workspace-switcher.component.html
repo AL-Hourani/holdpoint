@@ -8,7 +8,7 @@
     (change)="onChange($event)"
   >
     <option value="" disabled [selected]="!ws.currentId()">Select a workspace</option>
-    @for (w of ws.workspaces(); track w.id) {
+    @for (w of workspaces(); track w.id) {
       <option [value]="w.id">{{ w.name }}</option>
     }
   </select>

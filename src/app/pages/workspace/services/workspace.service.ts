@@ -17,14 +17,7 @@ export class WorkspaceService {
 
   private readonly http = inject(HttpClient);
   readonly workspaces = signal<WorkspaceResponse[]>([
-    {
-      id: "dhdhhd-3yehheh-jjejjeh",
-      name: "Acme Tecj",
-      slug: "./ahourni",
-      status :  'ACTIVE',
-      createdBy : "",
-      createdAt: "",
-    }
+
   ]);
   readonly currentId = signal<string>(localStorage.getItem('workspaceId') ?? '');
 

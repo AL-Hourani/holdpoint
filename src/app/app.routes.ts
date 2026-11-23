@@ -19,12 +19,7 @@ export const routes: Routes = [
   },
 
   { path: 'pricing', title: 'Alhourani . pricing', loadComponent: () => import('./pages/pricing/pricing.component').then(m => m.PricingComponent) },
-  {
-    path : "settings" , loadComponent : () => import('./pages/settings/security/security').then(m => m.SecurityComponent),
-    // children :[
-    //    { path: 'security', title: 'Security · Holdpoint', loadComponent: () => import('./pages/settings/security/security').then(m => m.SecurityComponent) },
-    // ]
-  },
+
   { path: 'console', loadComponent: () => import('./layout/console-shell/console-shell.component').then(m => m.ConsoleShellComponent),
     children: [
       { path: '', pathMatch: 'full', title: 'Overview · Holdpoint', loadComponent: () => import('./pages/overview/overview.component').then(m => m.OverviewComponent) },
@@ -58,7 +53,13 @@ export const routes: Routes = [
           loadComponent: () =>
             import('./pages/notifications/notifications-center.component')
               .then(m => m.NotificationsCenterComponent)
-        }
+        },
+          {
+            path : "settings" , loadComponent : () => import('./pages/settings/security/security').then(m => m.SecurityComponent),
+            // children :[
+            //    { path: 'security', title: 'Security · Holdpoint', loadComponent: () => import('./pages/settings/security/security').then(m => m.SecurityComponent) },
+            // ]
+          },
 
     ] },
   { path: '**', redirectTo: '' },

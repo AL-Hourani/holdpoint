@@ -54,11 +54,11 @@
           <label for="r">Resource <span>*</span></label>
 
           <div class="select-wrap">
-            <select id="r" formControlName="resourceId">
+            <select id="r" formControlName="resourceKey">
               <option value="" disabled>Select a resource</option>
               @for (r of resources(); track r.id) {
-                <option [value]="r.id">
-                  {{ r.name }} ({{ r.resourceKey }})
+                <option [value]="r.resourceKey">
+                  {{ r.resourceKey }}
                 </option>
               }
             </select>
@@ -180,7 +180,8 @@
         <button
           type="submit"
           class="submit-btn"
-          [disabled]="form.invalid || tooMany() || busy()">
+          /* [disabled]="form.invalid || tooMany() || busy()" */
+          > 
           @if (busy()) {
             <span class="button-spinner"></span>
             Creating hold...

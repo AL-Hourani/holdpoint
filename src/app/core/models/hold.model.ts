@@ -4,12 +4,13 @@ export interface Hold {
     id: string; 
     resourceKey: string; 
     quantity: number; 
+    holderName: string; 
     status: HoldStatus; 
     createdAt: string; 
     expiresAt: string; 
 }
 export interface CreateHoldRequest { 
-    resourceId: string; 
+    resourceKey: string; 
     holderName: string; 
     quantity: number; 
     durationMinutes: number; 

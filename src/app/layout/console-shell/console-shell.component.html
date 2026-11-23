@@ -27,12 +27,16 @@
 
     <!-- Current application -->
     <a routerLink="/console" class="app-chip">
+      <img src="/holdpoint.svg" alt="holdpoint" width="34" height="34">
       <span class="app-name">Holdpoint</span>
       
     </a>
 
 
+    <span class="brand-divider"></span>
+
     <!-- workspaces -->
+     <span>Workspace</span>
      <app-workspace-switcher />
 
   </div>
@@ -78,59 +82,70 @@
       <svg lucideBell></svg>
     </a>
 
+
     <!-- ACCOUNT -->
-    <div class="account-wrapper">
+    <div class="account">
 
       <button
         class="avatar"
         type="button"
-        (click)="menu.set(!menu())"
-        aria-label="Account menu"
+        (click)="toggle()"
+        aria-label="Open account panel"
+        aria-haspopup="dialog"
         [attr.aria-expanded]="menu()">
-
-        <!-- {{ initial() }} -->
-
+        <svg lucideUserRound></svg>
       </button>
 
-      @if (menu()) {
-        <div class="account-menu">
+      <div class="scrim" [class.open]="menu()" (click)="close()" aria-hidden="true"></div>
 
-          <div class="account-info">
+      <aside
+        class="drawer"
+        [class.open]="menu()"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="account-title">
 
-            <div class="account-avatar">
-              <!-- {{ initial() }} -->
-            </div>
+        <header class="drawer-head">
+          <span class="drawer-eyebrow">Alhourani account</span>
+          <button #closeBtn class="icon-btn" type="button" (click)="close()" aria-label="Close panel">
+            <svg lucideX></svg>
+          </button>
+        </header>
 
-            <div class="account-details">
-              <strong>
-                {{ auth.currentUser()?.fullName }}
-              </strong>
-
-              <span>
-                {{ auth.currentUser()?.email }}
-              </span>
-
-              <small>Alhourani account</small>
-            </div>
-
+        <section class="profile">
+          <div class="">
+             <svg lucideUserRound></svg>
           </div>
+          <h2 id="account-title">{{ auth.currentUser()?.fullName }}</h2>
+          <p>{{ auth.currentUser()?.email }}</p>
+        </section>
 
-          <div class="account-menu-divider"></div>
+        <!-- <nav class="drawer-nav" aria-label="Account">
+          <p class="nav-label">Manage</p>
 
-          <button
-            class="signout-btn"
-            type="button"
-            (click)="auth.logout()">
+        
+          <button type="button" class="nav-item" disabled>
+            <svg lucideUser></svg><span>Profile</span><em>Soon</em>
+          </button>
+          <button type="button" class="nav-item" disabled>
+            <svg lucideShieldCheck></svg><span>Security</span><em>Soon</em>
+          </button>
+          <button type="button" class="nav-item" disabled>
+            <svg lucideSettings></svg><span>Preferences</span><em>Soon</em>
+          </button>
+        </nav> -->
 
+        <footer class="drawer-foot">
+          <button class="signout" type="button" (click)="auth.logout()">
             <svg lucideLogOut></svg>
             Sign out
-
           </button>
-
-        </div>
-      }
-
+          <small>Alhourani · ecosystem</small>
+        </footer>
+      </aside>
     </div>
+
+    <!-- end account -->
 
   </div>
 

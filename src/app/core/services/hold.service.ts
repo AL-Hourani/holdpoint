@@ -23,6 +23,9 @@ export class HoldService {
   }
 
   
-  create(b: CreateHoldRequest) { return this.http.post<Hold>(this.base, b); }
+  create(request: CreateHoldRequest) { 
+    return this.http.post<Hold>(this.base, request); 
+  }
+
   release(id: string) { return this.http.post<Hold>(`${this.base}/${id}/release`, {}); }
 }

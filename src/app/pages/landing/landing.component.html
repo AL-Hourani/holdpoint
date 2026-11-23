@@ -18,26 +18,26 @@
       <a routerLink="/pricing">Pricing</a>
     </nav>
 
-  
-
-    <div class="account">
-      @if (auth.initialized()) {
-        @if (auth.isAuthenticated()) {
-          <div class="user">
-            <svg lucideUserRound></svg>
-            <span >{{ auth.currentUser()?.fullName }}</span>
-          </div>
-          <a routerLink="/console" class="cta">Console
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
-          </a>
-        } @else {
-          <a routerLink="/login" class="signin">Sign in</a>
-          <a routerLink="/register" class="cta">Get started
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
-          </a>
-        }
+    
+  <div class="account">
+    @if (auth.initialized()) {
+      @if (auth.isAuthenticated()) {
+        <a routerLink="/console" class="cta">
+          Open Console
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+        </a>
+       
+      } @else {
+        <a routerLink="/login" class="signin">Sign in</a>
+        <a routerLink="/register" class="cta">
+          Get started
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+        </a>
       }
-    </div>
+    } @else {
+      <span class="account-skeleton" aria-hidden="true"></span>
+    }
+  </div>
   </header>
 
   <main class="hero">
